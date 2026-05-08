@@ -11,7 +11,8 @@ import java.util.Random;
 
 public class PoolsGenerator extends ChunkGenerator {
     private static final int BEDROCK_LEVEL = 60;
-    private static final int ROOF_HEIGHT = 5;
+    private static final int ROOF_MIN_HEIGHT = 3;
+    private static final int ROOF_MAX_HEIGHT = 10;
     private final LiminalWorldPlugin plugin;
     private final BiomeProvider biomeProvider;
 
@@ -28,14 +29,14 @@ public class PoolsGenerator extends ChunkGenerator {
     @Override
     public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunk) {
         final int floorLevel = BEDROCK_LEVEL + 2;
-        final int roofLevel = floorLevel + ROOF_HEIGHT;
-
+        final int roofLevel = floorLevel + random.nextInt(ROOF_MAX_HEIGHT - ROOF_MIN_HEIGHT) + ROOF_MIN_HEIGHT;
+        final int roofMaxLevel = roofLevel + ROOF_MAX_HEIGHT;
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 if (x == 0 || z == 0) {
                     // Walls and doorway
                     boolean isDoorway = x == 7 || z == 7 || x == 8 || z == 8 || x == 9 || z == 9;
-                    for (int y = floorLevel; y <= roofLevel; y++) {
+                    for (int y = floorLevel; y <= roofMaxLevel; y++) {
                         if (isDoorway && y < floorLevel + 3 && y > floorLevel) continue;
                         chunk.setBlock(x, y, z, Material.QUARTZ_BLOCK);
                     }
