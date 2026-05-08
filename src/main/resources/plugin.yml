@@ -1,0 +1,8 @@
+name: LiminalDeep
+main: com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin
+version: ${project.version}-${buildNumber}
+api-version: 26.1
+website: http://mine.elmakers.com
+author: NathanWolf,TheCrystalOfTheArchitect
+description: A pool-based liminal horror Bukkit mod for Minecraft. Find out what lurks beneath...
+load: STARTUP
