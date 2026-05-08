@@ -66,7 +66,7 @@ public class LiminalCommandExecutor implements TabExecutor {
     }
 
     private void showUsage(CommandSender sender) {
-        sender.sendMessage(ChatColor.RED + "Usage: /liminal go <pools>");
+        sender.sendMessage(ChatColor.RED + "Usage: /liminal go <pools|ocean>");
     }
 
     @Override
@@ -74,6 +74,6 @@ public class LiminalCommandExecutor implements TabExecutor {
         if (args.length == 1) {
             return List.of("go");
         }
-        return List.of("pools");
+        return List.of("pools", "ocean");
     }
 }

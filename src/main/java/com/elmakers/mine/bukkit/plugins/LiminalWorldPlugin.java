@@ -28,8 +28,18 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
 
     @Override
     public ChunkGenerator getDefaultWorldGenerator(@NonNull String worldName, String id) {
-        getLogger().info("Install pools world generator in world: " + worldName);
-        return new PoolsGenerator(this);
+        switch (worldName) {
+            case "world_pools":
+                getLogger().info("Install pools world generator in world: " + worldName);
+                return new PoolsGenerator(this);
+            case "world_ocean":
+                getLogger().info("Install ocean world generator in world: " + worldName);
+                return new OceanGenerator(this);
+            default:
+                getLogger().info("Don't know what to do with world: " + worldName);
+        }
+
+        return null;
     }
 
     public World getWorld(String level) {
