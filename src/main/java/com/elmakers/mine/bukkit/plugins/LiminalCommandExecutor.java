@@ -47,11 +47,7 @@ public class LiminalCommandExecutor implements TabExecutor {
             return;
         }
 
-        level = "world_" + level;
-        World world = plugin.getServer().getWorld(level);
-        if (world == null) {
-            world = Bukkit.createWorld(new WorldCreator(level));
-        }
+        World world = plugin.getWorld(level);
         if (world == null) {
             sender.sendMessage(ChatColor.RED + "Unable to load world " + level);
             return;
