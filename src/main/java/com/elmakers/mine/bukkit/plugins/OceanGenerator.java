@@ -3,18 +3,27 @@ package com.elmakers.mine.bukkit.plugins;
 import java.util.Random;
 
 import org.bukkit.Material;
+import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class OceanGenerator extends ChunkGenerator {
     private static final int SEA_LEVEL = 32;
     private static final int SAND_LEVEL = 6;
     private static final int BEDROCK_LAYER = 1;
     private final LiminalWorldPlugin plugin;
+    private final BiomeProvider biomeProvider;
 
     public OceanGenerator(LiminalWorldPlugin plugin) {
         this.plugin = plugin;
+        biomeProvider = new DesertBiomeProvider();
+    }
+
+    @Nullable
+    public BiomeProvider getDefaultBiomeProvider(@NotNull WorldInfo worldInfo) {
+        return biomeProvider;
     }
 
     @Override
