@@ -1,8 +1,9 @@
 package com.elmakers.mine.bukkit.plugins;
 
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.generator.WorldInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
@@ -18,8 +19,7 @@ public class PoolsGenerator extends ChunkGenerator {
     }
 
     @Override
-    public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biome) {
-        ChunkData chunk = createChunkData(world);
+    public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunk) {
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 for (int y = SEA_LEVEL; y > ISLAND_LAYER; y--) {
@@ -45,6 +45,5 @@ public class PoolsGenerator extends ChunkGenerator {
                 chunk.setBlock(x, 0, z, Material.BEDROCK);
             }
         }
-        return chunk;
     }
 }

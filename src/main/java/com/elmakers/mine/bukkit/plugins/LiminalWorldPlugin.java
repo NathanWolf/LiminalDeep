@@ -3,6 +3,7 @@ package com.elmakers.mine.bukkit.plugins;
 import org.bukkit.event.Listener;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jspecify.annotations.NonNull;
 
 public class LiminalWorldPlugin extends JavaPlugin implements Listener {
 
@@ -17,7 +18,7 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
     }
 
     @Override
-    public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
+    public ChunkGenerator getDefaultWorldGenerator(@NonNull String worldName, String id) {
         getLogger().info("Install pools world generator in world: " + worldName);
         return new PoolsGenerator(this);
     }
