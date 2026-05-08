@@ -52,9 +52,8 @@ public class LiminalCommandExecutor implements TabExecutor {
             sender.sendMessage(ChatColor.RED + "Unable to load world " + level);
             return;
         }
-        Block highest = world.getHighestBlockAt(0, 0);
         Player player = (Player)sender;
-        player.teleport(highest.getLocation().add(0, 1, 0));
+        player.teleport(world.getSpawnLocation());
     }
 
     private boolean checkPlayer(CommandSender sender) {
