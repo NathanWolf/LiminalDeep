@@ -9,7 +9,7 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        // Put here anything you want to happen when the server starts
+        new LiminalCommandExecutor(this);
     }
 
     @Override

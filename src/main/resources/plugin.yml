@@ -6,3 +6,9 @@ website: http://mine.elmakers.com
 author: NathanWolf,TheCrystalOfTheArchitect
 description: A pool-based liminal horror Bukkit mod for Minecraft. Find out what lurks beneath...
 load: STARTUP
+commands:
+  liminal:
+    permission: liminal
+    description: Commands for the liminal plugin
+    usage: |
+      /liminal go <pools>        Go to a specific liminal area
