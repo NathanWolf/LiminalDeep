@@ -24,6 +24,7 @@ public class PoolsGenerator extends ChunkGenerator {
     private static final double WINDOW_PROBABILITY = 0.3;
     private static final double ISLAND_PROBABILITY = 0.75;
     private static final double POOL_PROBABILITY = 0.75;
+    private static final double DOUBLE_DOOR_PROBABILITY = 0.5;
     private final LiminalWorldPlugin plugin;
     private final BiomeProvider biomeProvider;
 
@@ -68,6 +69,10 @@ public class PoolsGenerator extends ChunkGenerator {
         if (random.nextDouble() > 0.5) xWindowLocation = 15 - xWindowLocation;
         int zWindowLocation = random.nextInt(4 - doorwayWidthHalf) + 1;
         if (random.nextDouble() > 0.5) zWindowLocation = 15 - zWindowLocation;
+        final boolean hasDoubleDoor = random.nextDouble() < DOUBLE_DOOR_PROBABILITY;
+        final boolean doorXSide = random.nextDouble() < 0.5;
+        final boolean hasXDoor = hasDoubleDoor || doorXSide;
+        final boolean hasZDoor = hasDoubleDoor || !doorXSide;
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 boolean isSunRoof = x >= 7 && z >= 7 && x <= 9 && z <= 9;
@@ -76,6 +81,8 @@ public class PoolsGenerator extends ChunkGenerator {
                     if ((hasXWall && z == 0) || (hasZWall && x == 0)) {
                         // Walls and doorway
                         boolean isDoorway = (x >= doorwayLeft && x <= doorwayRight) || (z >= doorwayLeft && z <= doorwayRight);
+                        if (!hasXDoor && z == 0) isDoorway = false;
+                        else if (!hasZDoor && x == 0) isDoorway = false;
                         for (int y = floorLevel; y <= roofMaxLevel; y++) {
                             if (isDoorway && y <= doorwayLevel && y > floorLevel) continue;
                             chunk.setBlock(x, y, z, Material.QUARTZ_BLOCK);
