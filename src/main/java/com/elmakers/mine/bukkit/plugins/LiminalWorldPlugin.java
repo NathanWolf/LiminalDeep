@@ -31,22 +31,6 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
         // Put here anything you want to happen when the server stops
     }
 
-    @Override
-    public ChunkGenerator getDefaultWorldGenerator(@NonNull String worldName, String id) {
-        switch (worldName) {
-            case "world_pools":
-                getLogger().info("Install pools world generator in world: " + worldName);
-                return new PoolsGenerator(this);
-            case "world_ocean":
-                getLogger().info("Install ocean world generator in world: " + worldName);
-                return new OceanGenerator(this);
-            default:
-                getLogger().info("Don't know what to do with world: " + worldName);
-        }
-
-        return null;
-    }
-
     public Location getSpawnLocation(World world) {
         final int maxY = world.getMaxHeight();
         switch (world.getName()) {
@@ -72,7 +56,19 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
         String worldName = "world_" + level;
         World world = getServer().getWorld(worldName);
         if (world == null) {
-            world = Bukkit.createWorld(new WorldCreator(worldName));
+            final ChunkGenerator generator;
+            switch (level) {
+                case "pools":
+                    generator = new PoolsGenerator(this);
+                    break;
+                case "ocean":
+                    generator = new OceanGenerator(this);
+                    break;
+                default:
+                    generator = null;
+                    break;
+            }
+            world = Bukkit.createWorld(new WorldCreator(worldName).generator(generator));
         }
         world.setGameRule(GameRules.ADVANCE_WEATHER, false);
         world.setGameRule(GameRules.ADVANCE_TIME, false);
