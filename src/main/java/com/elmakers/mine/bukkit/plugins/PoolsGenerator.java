@@ -19,7 +19,7 @@ public class PoolsGenerator extends ChunkGenerator {
     private static final int DOORWAY_MIN_HEIGHT = 2;
     private static final int DOORWAY_MAX_HEIGHT = 4;
     private static final int DOORWAY_MAX_WIDTH_HALF = 3;
-    private static final int WALKWAY_MAX_WIDTH_HALF = 4;
+    private static final int WALKWAY_MAX_WIDTH_HALF = 5;
     private static final double WALL_PROBABILITY = 0.6;
     private static final double WINDOW_PROBABILITY = 0.3;
     private static final double ISLAND_PROBABILITY = 0.75;
@@ -69,7 +69,7 @@ public class PoolsGenerator extends ChunkGenerator {
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 boolean isSunRoof = x >= 7 && z >= 7 && x <= 9 && z <= 9;
-                boolean isWalkway = (x >= walkwayLeft && x <= walkWayRight) || (z >= walkwayLeft && z <= walkWayRight);
+                boolean isWalkway = (x > walkwayLeft && x < walkWayRight) || (z > walkwayLeft && z < walkWayRight);
                 if (x == 0 || z == 0) {
                     if ((hasXWall && z == 0) || (hasZWall && x == 0)) {
                         // Walls and doorway
