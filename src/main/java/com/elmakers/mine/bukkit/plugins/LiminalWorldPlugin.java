@@ -35,7 +35,7 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
         final int maxY = world.getMaxHeight();
         switch (world.getName()) {
             case "world_pools":
-                return new Location(world, 1.5, PoolsGenerator.FLOOR_LEVEL + 1, 1.5);
+                return new Location(world, 8.5, PoolsGenerator.FLOOR_LEVEL + 1, 8.5);
             case "world_ocean":
                 return new Location(world, 0, maxY - OceanGenerator.SEA_LEVEL + 1, 0);
             default:
