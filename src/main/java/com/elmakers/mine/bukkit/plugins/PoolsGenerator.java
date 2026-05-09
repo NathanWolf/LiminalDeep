@@ -3,11 +3,13 @@ package com.elmakers.mine.bukkit.plugins;
 import org.bukkit.Material;
 import org.bukkit.block.EndGateway;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.CaveVines;
 import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Random;
 
@@ -25,6 +27,7 @@ public class PoolsGenerator extends ChunkGenerator {
     private static final double ISLAND_PROBABILITY = 0.75;
     private static final double POOL_PROBABILITY = 0.75;
     private static final double DOUBLE_DOOR_PROBABILITY = 0.5;
+    private static final double FOOD_PROBABILITY = 0.01;
     private final LiminalWorldPlugin plugin;
     private final BiomeProvider biomeProvider;
 
@@ -45,6 +48,15 @@ public class PoolsGenerator extends ChunkGenerator {
             gateway.setAge(-Integer.MAX_VALUE);
         }
         return gatewayData;
+    }
+
+    private void makeFood(int x, int z, int minY, int maxY, @NonNull ChunkData chunk) {
+        BlockData foodData = plugin.getServer().createBlockData(Material.CAVE_VINES);
+        CaveVines vines = (CaveVines)foodData;
+        vines.setBerries(true);
+        for (int y = minY; y <= maxY; y++) {
+            chunk.setBlock(x, y, z, foodData);
+        }
     }
 
     @Override
@@ -73,6 +85,8 @@ public class PoolsGenerator extends ChunkGenerator {
         final boolean doorXSide = random.nextDouble() < 0.5;
         final boolean hasXDoor = hasDoubleDoor || doorXSide;
         final boolean hasZDoor = hasDoubleDoor || !doorXSide;
+        final boolean hasFood = random.nextDouble() < FOOD_PROBABILITY;
+        final int foodCorner = random.nextInt(4);
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 boolean isSunRoof = x >= 7 && z >= 7 && x <= 9 && z <= 9;
@@ -126,9 +140,34 @@ public class PoolsGenerator extends ChunkGenerator {
                     }
                 }
 
+                // Add food
+                if (hasFood) {
+                    switch (foodCorner) {
+                        case 0:
+                            if (x == 1 && z == 1) {
+                                makeFood(x, z, floorLevel + 1, roofLevel - 1, chunk);
+                            }
+                            break;
+                        case 1:
+                            if (x == 15 && z == 1) {
+                                makeFood(x, z, floorLevel + 1, roofLevel - 1, chunk);
+                            }
+                            break;
+                        case 2:
+                            if (x == 1 && z == 15) {
+                                makeFood(x, z, floorLevel + 1, roofLevel - 1, chunk);
+                            }
+                            break;
+                        case 3:
+                            if (x == 15 && z == 15) {
+                                makeFood(x, z, floorLevel + 1, roofLevel - 1, chunk);
+                            }
+                            break;
+                    }
+                }
+
                 // Fill in windows after
                 if (hasXWall && hasXWindow && x == xWindowLocation && z == 0) {
-                    BlockData gatewayData = plugin.getServer().createBlockData(Material.END_GATEWAY);
                     chunk.setBlock(x, floorLevel + 2, z, getWindowBlock());
                 } else if (hasZWall && hasZWindow && z == zWindowLocation && x == 0) {
                     chunk.setBlock(x, floorLevel + 2, z, getWindowBlock());
