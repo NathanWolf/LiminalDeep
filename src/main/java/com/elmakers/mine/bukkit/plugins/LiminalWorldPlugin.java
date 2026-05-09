@@ -44,7 +44,7 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
     }
 
     public boolean sendToLevel(Player player, String level) {
-        World poolsWorld = getWorld("pools");
+        World poolsWorld = getWorld(level);
         if (poolsWorld == null) {
             return false;
         }

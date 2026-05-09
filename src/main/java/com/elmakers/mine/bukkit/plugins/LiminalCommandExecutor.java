@@ -2,11 +2,7 @@ package com.elmakers.mine.bukkit.plugins;
 
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -46,14 +42,10 @@ public class LiminalCommandExecutor implements TabExecutor {
         if (!checkPlayer(sender)) {
             return;
         }
-
-        World world = plugin.getWorld(level);
-        if (world == null) {
-            sender.sendMessage(ChatColor.RED + "Unable to load world " + level);
-            return;
-        }
         Player player = (Player)sender;
-        player.teleport(world.getSpawnLocation());
+        if (!plugin.sendToLevel(player, level)) {
+            sender.sendMessage(ChatColor.RED + "Unable to load world " + level);
+        }
     }
 
     private boolean checkPlayer(CommandSender sender) {
