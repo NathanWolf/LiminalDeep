@@ -19,6 +19,10 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
 
         new LiminalCommandExecutor(this);
         pm.registerEvents(new PlayerListener(this), this);
+        getServer().getScheduler().runTaskLater(this, () -> {
+            getWorld("pools");
+            getWorld("ocean");
+        }, 1L);
     }
 
     @Override
