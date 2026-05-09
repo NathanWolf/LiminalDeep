@@ -1,6 +1,8 @@
 package com.elmakers.mine.bukkit.plugins;
 
 import org.bukkit.Material;
+import org.bukkit.block.EndGateway;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
@@ -19,6 +21,7 @@ public class PoolsGenerator extends ChunkGenerator {
     private static final int DOORWAY_MAX_WIDTH_HALF = 3;
     private static final int WALKWAY_MAX_WIDTH_HALF = 4;
     private static final double WALL_PROBABILITY = 0.6;
+    private static final double WINDOW_PROBABILITY = 0.3;
     private final LiminalWorldPlugin plugin;
     private final BiomeProvider biomeProvider;
 
@@ -32,6 +35,15 @@ public class PoolsGenerator extends ChunkGenerator {
         return biomeProvider;
     }
 
+    private BlockData getWindowBlock() {
+        BlockData gatewayData = plugin.getServer().createBlockData(Material.END_GATEWAY);
+        if (gatewayData instanceof EndGateway) {
+            EndGateway gateway = (EndGateway)gatewayData;
+            gateway.setAge(-Integer.MAX_VALUE);
+        }
+        return gatewayData;
+    }
+
     @Override
     public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunk) {
         final int floorLevel = FLOOR_LEVEL;
@@ -42,10 +54,16 @@ public class PoolsGenerator extends ChunkGenerator {
         final int doorwayLeft = 7 - doorwayWidthHalf;
         final int doorwayRight = 9 + doorwayWidthHalf;
         final int walkwayWidthHalf = random.nextInt(WALKWAY_MAX_WIDTH_HALF);
-        final int walkwayLeft = 8 - doorwayWidthHalf;
-        final int walkWayRight = 8 + doorwayWidthHalf;
-        boolean hasXWall = random.nextDouble() < WALL_PROBABILITY;
-        boolean hasZWall = random.nextDouble() < WALL_PROBABILITY;
+        final int walkwayLeft = 8 - walkwayWidthHalf;
+        final int walkWayRight = 8 + walkwayWidthHalf;
+        final boolean hasXWall = random.nextDouble() < WALL_PROBABILITY;
+        final boolean hasZWall = random.nextDouble() < WALL_PROBABILITY;
+        final boolean hasXWindow = random.nextDouble() < WINDOW_PROBABILITY;
+        final boolean hasZWindow = random.nextDouble() < WINDOW_PROBABILITY;
+        int xWindowLocation = random.nextInt(4 - doorwayWidthHalf) + 1;
+        if (random.nextDouble() > 0.5) xWindowLocation = 15 - xWindowLocation;
+        int zWindowLocation = random.nextInt(4 - doorwayWidthHalf) + 1;
+        if (random.nextDouble() > 0.5) zWindowLocation = 15 - zWindowLocation;
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 boolean isSunRoof = x >= 7 && z >= 7 && x <= 9 && z <= 9;
@@ -86,6 +104,14 @@ public class PoolsGenerator extends ChunkGenerator {
                     for (int y = roofLevel + 1; y <= roofMaxLevel; y++) {
                         chunk.setBlock(x, y, z, Material.QUARTZ_BLOCK);
                     }
+                }
+
+                // Fill in windows after
+                if (hasXWall && hasXWindow && x == xWindowLocation && z == 0) {
+                    BlockData gatewayData = plugin.getServer().createBlockData(Material.END_GATEWAY);
+                    chunk.setBlock(x, floorLevel + 2, z, getWindowBlock());
+                } else if (hasZWall && hasZWindow && z == zWindowLocation && x == 0) {
+                    chunk.setBlock(x, floorLevel + 2, z, getWindowBlock());
                 }
 
                 chunk.setBlock(x, BEDROCK_LEVEL + 1, z, Material.QUARTZ_BLOCK);
