@@ -20,9 +20,10 @@ public class PoolsGenerator extends ChunkGenerator {
     private static final int DOORWAY_MAX_HEIGHT = 4;
     private static final int DOORWAY_MAX_WIDTH_HALF = 3;
     private static final int WALKWAY_MAX_WIDTH_HALF = 5;
-    private static final double WALL_PROBABILITY = 0.6;
+    private static final double WALL_PROBABILITY = 0.75;
     private static final double WINDOW_PROBABILITY = 0.3;
     private static final double ISLAND_PROBABILITY = 0.75;
+    private static final double POOL_PROBABILITY = 0.75;
     private final LiminalWorldPlugin plugin;
     private final BiomeProvider biomeProvider;
 
@@ -62,6 +63,7 @@ public class PoolsGenerator extends ChunkGenerator {
         final boolean hasXWindow = random.nextDouble() < WINDOW_PROBABILITY;
         final boolean hasZWindow = random.nextDouble() < WINDOW_PROBABILITY;
         final boolean hasIsland = random.nextDouble() < ISLAND_PROBABILITY;
+        final boolean hasPools = random.nextDouble() < POOL_PROBABILITY;
         int xWindowLocation = random.nextInt(4 - doorwayWidthHalf) + 1;
         if (random.nextDouble() > 0.5) xWindowLocation = 15 - xWindowLocation;
         int zWindowLocation = random.nextInt(4 - doorwayWidthHalf) + 1;
@@ -103,7 +105,11 @@ public class PoolsGenerator extends ChunkGenerator {
                 }  else {
                     // Water and roof
                     chunk.setBlock(x, roofLevel, z, Material.QUARTZ_BLOCK);
-                    chunk.setBlock(x, floorLevel, z, Material.WATER);
+                    if (hasPools) {
+                        chunk.setBlock(x, floorLevel, z, Material.WATER);
+                    } else {
+                        chunk.setBlock(x, floorLevel, z, Material.QUARTZ_BLOCK);
+                    }
                 }
 
                 // Extend ceiling up
