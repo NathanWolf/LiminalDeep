@@ -76,12 +76,10 @@ public class PoolsGenerator extends ChunkGenerator {
                     chunk.setBlock(x, floorLevel, z, Material.WATER);
                 }
 
-                // Sunroof walls
-                if (x >= 6 && z >= 6 && x <= 10 && z <= 10) {
-                    if (x == 6 || z == 6 || x == 10 || z == 10) {
-                        for (int y = roofLevel + 1; y <= roofMaxLevel; y++) {
-                            chunk.setBlock(x, y, z, Material.QUARTZ_BLOCK);
-                        }
+                // Extend ceiling up
+                if (!isSunRoof) {
+                    for (int y = roofLevel + 1; y <= roofMaxLevel; y++) {
+                        chunk.setBlock(x, y, z, Material.QUARTZ_BLOCK);
                     }
                 }
 
