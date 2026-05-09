@@ -17,6 +17,7 @@ public class PoolsGenerator extends ChunkGenerator {
     private static final int DOORWAY_MIN_HEIGHT = 2;
     private static final int DOORWAY_MAX_HEIGHT = 4;
     private static final int DOORWAY_MAX_WIDTH_HALF = 3;
+    private static final int WALKWAY_MAX_WIDTH_HALF = 4;
     private static final double WALL_PROBABILITY = 0.6;
     private final LiminalWorldPlugin plugin;
     private final BiomeProvider biomeProvider;
@@ -40,11 +41,15 @@ public class PoolsGenerator extends ChunkGenerator {
         final int doorwayWidthHalf = random.nextInt(DOORWAY_MAX_WIDTH_HALF);
         final int doorwayLeft = 7 - doorwayWidthHalf;
         final int doorwayRight = 9 + doorwayWidthHalf;
+        final int walkwayWidthHalf = random.nextInt(WALKWAY_MAX_WIDTH_HALF);
+        final int walkwayLeft = 8 - doorwayWidthHalf;
+        final int walkWayRight = 8 + doorwayWidthHalf;
         boolean hasXWall = random.nextDouble() < WALL_PROBABILITY;
         boolean hasZWall = random.nextDouble() < WALL_PROBABILITY;
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 boolean isSunRoof = x >= 7 && z >= 7 && x <= 9 && z <= 9;
+                boolean isWalkway = (x >= walkwayLeft && x <= walkWayRight) || (z >= walkwayLeft && z <= walkWayRight);
                 if (x == 0 || z == 0) {
                     if ((hasXWall && z == 0) || (hasZWall && x == 0)) {
                         // Walls and doorway
@@ -60,13 +65,13 @@ public class PoolsGenerator extends ChunkGenerator {
                         }
                     }
                 } else if (x == 1 || z == 1 || x == 15 || z == 15) {
-                    // Walkway
+                    // Border walkway
                     chunk.setBlock(x, floorLevel, z, Material.QUARTZ_BLOCK);
                     chunk.setBlock(x, roofLevel, z, Material.QUARTZ_BLOCK);
                 } else if (isSunRoof) {
                     // Island
                     chunk.setBlock(x, floorLevel, z, Material.QUARTZ_BLOCK);
-                } else if (x == 8 || z == 8) {
+                } else if (isWalkway) {
                     // Pathways
                     chunk.setBlock(x, roofLevel, z, Material.QUARTZ_BLOCK);
                     chunk.setBlock(x, floorLevel, z, Material.QUARTZ_BLOCK);
