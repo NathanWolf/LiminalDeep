@@ -1,5 +1,6 @@
 package com.elmakers.mine.bukkit.plugins;
 
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,5 +27,11 @@ public class PlayerListener implements Listener {
                 plugin.getLogger().info("Player " + player.getName() + " sent to starting world");
             }
         }
+        player.setGameMode(GameMode.ADVENTURE);
+    }
+
+    @EventHandler
+    public void onPlayerPortal(PlayerPortalEvent event) {
+
     }
 }
