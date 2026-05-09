@@ -1,10 +1,11 @@
 package com.elmakers.mine.bukkit.plugins;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
 import org.bukkit.GameRules;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
@@ -44,6 +45,27 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
         }
 
         return null;
+    }
+
+    public Location getSpawnLocation(World world) {
+        final int maxY = world.getMaxHeight();
+        switch (world.getName()) {
+            case "world_pools":
+                return new Location(world, 1.5, PoolsGenerator.FLOOR_LEVEL + 1, 1.5);
+            case "world_ocean":
+                return new Location(world, 0, maxY - OceanGenerator.SEA_LEVEL + 1, 0);
+            default:
+                return world.getSpawnLocation();
+        }
+    }
+
+    public boolean sendToLevel(Player player, String level) {
+        World poolsWorld = getWorld("pools");
+        if (poolsWorld == null) {
+            return false;
+        }
+        player.teleport(getSpawnLocation(poolsWorld));
+        return true;
     }
 
     public World getWorld(String level) {

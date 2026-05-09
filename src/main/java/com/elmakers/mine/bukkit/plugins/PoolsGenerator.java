@@ -11,6 +11,7 @@ import java.util.Random;
 
 public class PoolsGenerator extends ChunkGenerator {
     private static final int BEDROCK_LEVEL = 60;
+    public static final int FLOOR_LEVEL = BEDROCK_LEVEL + 2;
     private static final int ROOF_MIN_HEIGHT = 3;
     private static final int ROOF_MAX_HEIGHT = 10;
     private final LiminalWorldPlugin plugin;

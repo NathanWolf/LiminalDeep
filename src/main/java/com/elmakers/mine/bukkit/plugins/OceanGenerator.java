@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class OceanGenerator extends ChunkGenerator {
-    private static final int SEA_LEVEL = 32;
+    public static final int SEA_LEVEL = 32;
     private static final int SAND_LEVEL = 6;
     private static final int BEDROCK_LAYER = 1;
     private final LiminalWorldPlugin plugin;

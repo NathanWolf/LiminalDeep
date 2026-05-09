@@ -20,9 +20,10 @@ public class PlayerListener implements Listener {
         World world = player.getWorld();
         World startingWorld = plugin.getServer().getWorlds().get(0);
         if (world.equals(startingWorld)) {
-            World poolsWorld = plugin.getWorld("pools");
-            if (poolsWorld != null) {
-                player.teleport(poolsWorld.getSpawnLocation());
+            if (!plugin.sendToLevel(player, "pools")) {
+                plugin.getLogger().warning("Unable to send " + player.getName() + " to starting world");
+            } else {
+                plugin.getLogger().info("Player " + player.getName() + " sent to starting world");
             }
         }
     }
