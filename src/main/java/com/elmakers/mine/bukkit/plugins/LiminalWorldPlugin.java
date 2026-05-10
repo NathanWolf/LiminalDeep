@@ -31,6 +31,14 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
         // Put here anything you want to happen when the server stops
     }
 
+    public Location getSpawnLocation(String level) {
+        World poolsWorld = getWorld(level);
+        if (poolsWorld == null) {
+            return null;
+        }
+        return getSpawnLocation(poolsWorld);
+    }
+
     public Location getSpawnLocation(World world) {
         final int maxY = world.getMaxHeight();
         switch (world.getName()) {
@@ -44,11 +52,11 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
     }
 
     public boolean sendToLevel(Player player, String level) {
-        World poolsWorld = getWorld(level);
-        if (poolsWorld == null) {
+        Location spawnLocation = getSpawnLocation(level);
+        if (spawnLocation == null) {
             return false;
         }
-        player.teleport(getSpawnLocation(poolsWorld));
+        player.teleport(spawnLocation);
         return true;
     }
 

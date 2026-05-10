@@ -34,4 +34,12 @@ public class PlayerListener implements Listener {
     public void onPlayerPortal(PlayerPortalEvent event) {
 
     }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Location spawnLocation = plugin.getSpawnLocation("pools");
+        if (spawnLocation != null) {
+            event.getPlayer().setRespawnLocation(spawnLocation, true);
+        }
+    }
 }
