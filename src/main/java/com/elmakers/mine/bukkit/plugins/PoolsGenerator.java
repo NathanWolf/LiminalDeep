@@ -40,8 +40,8 @@ public class PoolsGenerator extends ChunkGenerator {
     };
 
     private static final Material[] WALL_BLOCK_SETS = {
-            Material.POLISHED_DIORITE,
-            Material.DIORITE
+        Material.POLISHED_DIORITE,
+        Material.DIORITE
     };
 
     public PoolsGenerator(LiminalWorldPlugin plugin) {
@@ -108,7 +108,7 @@ public class PoolsGenerator extends ChunkGenerator {
         Material floorBlock = FLOOR_BLOCK_SETS[random.nextInt(FLOOR_BLOCK_SETS.length)];
         Material wallBlock = WALL_BLOCK_SETS[random.nextInt(WALL_BLOCK_SETS.length)];
         Material ceilingBlock = WALL_BLOCK_SETS[random.nextInt(WALL_BLOCK_SETS.length)];
-        final int lightsFirst = walkwayLeft / 2;
+        final int lightsFirst = walkwayLeft / 2 + 1;
         final int lightsSecond = 16 - lightsFirst;
 
         for (int x = 0; x < 16; x++) {
