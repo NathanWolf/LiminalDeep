@@ -5,10 +5,10 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 
 public class PlayerListener implements Listener {
     private final LiminalWorldPlugin plugin;
@@ -34,7 +34,14 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerPortal(PlayerPortalEvent event) {
-
+        Player player = event.getPlayer();
+        World world = player.getWorld();
+        switch (world.getName()) {
+            case "world_pools":
+                event.setTo(plugin.getSpawnLocation("ocean"));
+                break;
+            default:
+        }
     }
 
     @EventHandler
