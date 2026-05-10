@@ -19,35 +19,64 @@ import java.util.List;
 import java.util.Random;
 
 public class PoolsGenerator extends LiminalGenerator {
-    private static final int BEDROCK_LEVEL = 60;
-    public static final int FLOOR_LEVEL = BEDROCK_LEVEL + 2;
-    private static final int ROOF_MIN_HEIGHT = 4;
-    private static final int ROOF_MAX_HEIGHT = 10;
-    private static final int DOORWAY_MIN_HEIGHT = 2;
-    private static final int DOORWAY_MAX_HEIGHT = 4;
-    private static final int DOORWAY_MAX_WIDTH_HALF = 3;
-    private static final int WALKWAY_MAX_WIDTH_HALF = 5;
-    private static final double WALL_PROBABILITY = 0.75;
-    private static final double WINDOW_PROBABILITY = 0.3;
-    private static final double ISLAND_PROBABILITY = 0.75;
-    private static final double POOL_PROBABILITY = 0.75;
-    private static final double DOUBLE_DOOR_PROBABILITY = 0.5;
-    private static final double FOOD_PROBABILITY = 0.01;
+    private int BEDROCK_LEVEL = 60;
+    private int FLOOR_LEVEL = 62;
+    private int ROOF_MIN_HEIGHT = 4;
+    private int ROOF_MAX_HEIGHT = 10;
+    private int DOORWAY_MIN_HEIGHT = 2;
+    private int DOORWAY_MAX_HEIGHT = 4;
+    private int DOORWAY_MAX_WIDTH_HALF = 3;
+    private int WALKWAY_MAX_WIDTH_HALF = 5;
+    private double WALL_PROBABILITY = 0.75;
+    private double WINDOW_PROBABILITY = 0.3;
+    private double ISLAND_PROBABILITY = 0.75;
+    private double POOL_PROBABILITY = 0.75;
+    private double DOUBLE_DOOR_PROBABILITY = 0.5;
+    private double FOOD_PROBABILITY = 0.01;
     private final BiomeProvider biomeProvider;
 
-    private static final Material[] FLOOR_BLOCK_SETS = {
+    private Material[] FLOOR_BLOCKS = {
         Material.BLUE_CONCRETE,
         Material.LIGHT_BLUE_CONCRETE
     };
 
-    private static final Material[] WALL_BLOCK_SETS = {
+    private Material[] WALL_BLOCKS = {
         Material.POLISHED_DIORITE,
         Material.DIORITE
+    };
+
+    private Material[] CEILING_BLOCKS = {
+            Material.POLISHED_DIORITE,
+            Material.DIORITE
+    };
+
+    private Material[] LIGHT_BLOCKS = {
+            Material.SEA_LANTERN
     };
 
     public PoolsGenerator(LiminalWorldPlugin plugin, ConfigurationSection generalConfig, ConfigurationSection config) {
         super(plugin, generalConfig, config);
         biomeProvider = new DesertBiomeProvider();
+
+        BEDROCK_LEVEL = config.getInt("bedrock_level", BEDROCK_LEVEL);
+        FLOOR_LEVEL = config.getInt("floor_level", FLOOR_LEVEL);
+        ROOF_MIN_HEIGHT = config.getInt("roof_min_height", ROOF_MIN_HEIGHT);
+        ROOF_MAX_HEIGHT = config.getInt("roof_max_height", ROOF_MAX_HEIGHT);
+        DOORWAY_MIN_HEIGHT = config.getInt("doorway_min_height", DOORWAY_MIN_HEIGHT);
+        DOORWAY_MAX_HEIGHT = config.getInt("doorway_max_height", DOORWAY_MAX_HEIGHT);
+        DOORWAY_MAX_WIDTH_HALF = config.getInt("doorway_max_width_half", DOORWAY_MAX_WIDTH_HALF);
+        WALKWAY_MAX_WIDTH_HALF = config.getInt("walkway_max_width_half", WALKWAY_MAX_WIDTH_HALF);
+        WALL_PROBABILITY = config.getDouble("wall_probability", WALL_PROBABILITY);
+        WINDOW_PROBABILITY = config.getDouble("window_probability", WINDOW_PROBABILITY);
+        ISLAND_PROBABILITY = config.getDouble("island_probability", ISLAND_PROBABILITY);
+        POOL_PROBABILITY = config.getDouble("pool_probability", POOL_PROBABILITY);
+        DOUBLE_DOOR_PROBABILITY = config.getDouble("double_door_probability", DOUBLE_DOOR_PROBABILITY);
+        FOOD_PROBABILITY = config.getDouble("food_probability", FOOD_PROBABILITY);
+
+        FLOOR_BLOCKS = plugin.getMaterials(config, "floor_blocks", FLOOR_BLOCKS);
+        WALL_BLOCKS = plugin.getMaterials(config, "wall_blocks", WALL_BLOCKS);
+        CEILING_BLOCKS = plugin.getMaterials(config, "ceiling_blocks", CEILING_BLOCKS);
+        LIGHT_BLOCKS = plugin.getMaterials(config, "light_blocks", LIGHT_BLOCKS);
     }
 
     @Override
@@ -106,17 +135,20 @@ public class PoolsGenerator extends LiminalGenerator {
         final boolean hasZDoor = hasDoubleDoor || !doorXSide;
         final boolean hasFood = random.nextDouble() < FOOD_PROBABILITY;
         final int foodCorner = random.nextInt(4);
-        Material floorBlock = FLOOR_BLOCK_SETS[random.nextInt(FLOOR_BLOCK_SETS.length)];
-        Material wallBlock = WALL_BLOCK_SETS[random.nextInt(WALL_BLOCK_SETS.length)];
-        Material ceilingBlock = WALL_BLOCK_SETS[random.nextInt(WALL_BLOCK_SETS.length)];
+        Material floorBlock = FLOOR_BLOCKS[random.nextInt(FLOOR_BLOCKS.length)];
+        Material wallBlock = WALL_BLOCKS[random.nextInt(WALL_BLOCKS.length)];
+        Material ceilingBlock = CEILING_BLOCKS[random.nextInt(CEILING_BLOCKS.length)];
+        Material lightBlock = LIGHT_BLOCKS[random.nextInt(LIGHT_BLOCKS.length)];
         final int lightsFirst = walkwayLeft / 2 + 1;
         final int lightsSecond = 16 - lightsFirst;
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 // Fill in the sub-floor first
-                chunk.setBlock(x, BEDROCK_LEVEL + 1, z, floorBlock);
                 chunk.setBlock(x, BEDROCK_LEVEL, z, Material.BEDROCK);
+                for (int y = BEDROCK_LEVEL + 1; y < FLOOR_LEVEL; y++) {
+                    chunk.setBlock(x, y, z, floorBlock);
+                }
 
                 boolean isSunRoof = x >= 7 && z >= 7 && x <= 9 && z <= 9;
                 boolean isWalkway = (x > walkwayLeft && x < walkWayRight) || (z > walkwayLeft && z < walkWayRight);
@@ -151,7 +183,7 @@ public class PoolsGenerator extends LiminalGenerator {
                     if (!hasIsland) {
                         chunk.setBlock(x, floorLevel, z, Material.WATER);
                         if (x == 8 && z == 8) {
-                            chunk.setBlock(x, floorLevel - 1, z, Material.SEA_LANTERN);
+                            chunk.setBlock(x, floorLevel - 1, z, lightBlock);
                         }
                     } else {
                         chunk.setBlock(x, floorLevel, z, floorBlock);
@@ -162,7 +194,7 @@ public class PoolsGenerator extends LiminalGenerator {
                     if (hasPools) {
                         chunk.setBlock(x, floorLevel, z, Material.WATER);
                         if ((x == lightsFirst || x == lightsSecond) && (z == lightsFirst || z == lightsSecond)) {
-                            chunk.setBlock(x, floorLevel - 1, z, Material.SEA_LANTERN);
+                            chunk.setBlock(x, floorLevel - 1, z, lightBlock);
                         }
                     } else {
                         chunk.setBlock(x, floorLevel, z, floorBlock);
@@ -214,7 +246,7 @@ public class PoolsGenerator extends LiminalGenerator {
 
     @Override
     public Location getSpawnLocation(World world) {
-        return new Location(world, 8.5, PoolsGenerator.FLOOR_LEVEL + 1, 8.5);
+        return new Location(world, 8.5, FLOOR_LEVEL + 1, 8.5);
     }
 
     @Override

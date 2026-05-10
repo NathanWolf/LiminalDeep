@@ -1,12 +1,14 @@
 package com.elmakers.mine.bukkit.plugins;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.World;
@@ -131,5 +133,18 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
 
     public LiminalGenerator getGeneratorByWorld(String worldName) {
         return worldGenerators.get(worldName);
+    }
+
+    public Material[] getMaterials(ConfigurationSection config, String key, Material[] defaults) {
+        List<String> materialNames = config.getStringList(key);
+        if (materialNames == null || materialNames.isEmpty()) {
+            return defaults;
+        }
+        Material[] materials = new Material[materialNames.size()];
+        for (int i = 0; i < materialNames.size(); i++) {
+            String materialName = materialNames.get(i);
+            materials[i] = Material.matchMaterial(materialName);
+        }
+        return materials;
     }
 }
