@@ -18,6 +18,7 @@ import org.bukkit.generator.WorldInfo;
 public class PoolsExitPopulator extends BlockPopulator {
     private static final int EXIT_MIN_DISTANCE_SQUARED = 640 * 640;
     private static final int EXIT_MAX_DISTANCE_SQUARED = 3200 * 3200;
+    private static final double EXIT_MAX_PROBABILITY = 0.3;
     private static final int BEDROCK_LEVEL = 60;
     private static final int COMMAND_BLOCK_LEVEL = BEDROCK_LEVEL - 2;
     private static final int FLOOR_LEVEL = BEDROCK_LEVEL + 2;
@@ -33,7 +34,7 @@ public class PoolsExitPopulator extends BlockPopulator {
     public void populate(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, LimitedRegion region) {
         final int distanceSquared = (chunkX * 16) * (chunkX * 16) + (chunkZ * 16) * (chunkZ * 16);
         final double exitProbability = distanceSquared < EXIT_MIN_DISTANCE_SQUARED ? 0 :
-                (double)(distanceSquared - EXIT_MIN_DISTANCE_SQUARED) / (EXIT_MAX_DISTANCE_SQUARED - EXIT_MIN_DISTANCE_SQUARED);
+                EXIT_MAX_PROBABILITY * (distanceSquared - EXIT_MIN_DISTANCE_SQUARED) / (EXIT_MAX_DISTANCE_SQUARED - EXIT_MIN_DISTANCE_SQUARED);
         final boolean isExit = random.nextDouble() < exitProbability;
 
         if (!isExit) return;
