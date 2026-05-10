@@ -1,44 +1,32 @@
 package com.elmakers.mine.bukkit.plugins;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Random;
 
+import org.bukkit.Chunk;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.Powerable;
 import org.bukkit.block.data.type.CommandBlock;
-import org.bukkit.block.data.type.Observer;
-import org.bukkit.craftbukkit.block.CraftBlockEntityState;
-import org.bukkit.craftbukkit.block.CraftCommandBlock;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
-
-import net.minecraft.world.level.BaseCommandBlock;
-import net.minecraft.world.level.block.entity.CommandBlockEntity;
 
 public class PoolsExitPopulator extends BlockPopulator {
     private static final int EXIT_MIN_DISTANCE_SQUARED = 10 * 10;
     private static final int EXIT_MAX_DISTANCE_SQUARED = 20 * 20;
     private static final int BEDROCK_LEVEL = 60;
-    private static Field commandBlockAccessor;
+    private static final int COMMAND_BLOCK_LEVEL = BEDROCK_LEVEL - 2;
+    private static final int FLOOR_LEVEL = BEDROCK_LEVEL + 2;
+    private static final int EXIT_LEVEL = -32;
 
     private final LiminalWorldPlugin plugin;
 
     public PoolsExitPopulator(LiminalWorldPlugin plugin) {
         this.plugin = plugin;
-    }
-
-    public static void initialize(LiminalWorldPlugin plugin) {
-        try {
-            commandBlockAccessor = CraftBlockEntityState.class.getDeclaredField("blockEntity");
-            commandBlockAccessor.setAccessible(true);
-        } catch (NoSuchFieldException ignore) {
-            plugin.getLogger().warning("Unable to access CraftBlockEntityState.blockEntity");
-        }
     }
 
     @Override
@@ -54,83 +42,77 @@ public class PoolsExitPopulator extends BlockPopulator {
         CommandBlock command = (CommandBlock)commandBlock;
         command.setConditional(false);
 
-        // TOOD "always on"
-        int centerX = chunkX << 4;
-        int centerZ = chunkZ << 4;
-        final int commandY = BEDROCK_LEVEL + 4;
-        final int commandX = centerX - 4;
-        final int commandZ = centerZ - 4;
+        final int chunkGlobalX = chunkX << 4;
+        final int chunkGlobalZ = chunkZ << 4;
+        final int commandY = COMMAND_BLOCK_LEVEL;
+        final int commandX = chunkGlobalX + 4;
+        final int commandZ = chunkGlobalZ + 4;
         region.setBlockData(commandX, commandY, commandZ, command);
         BlockState commandState = region.getBlockState(commandX, commandY, commandZ);
         if (commandState instanceof org.bukkit.block.CommandBlock) {
             org.bukkit.block.CommandBlock commandBlockState = (org.bukkit.block.CommandBlock)commandState;
-            commandBlockState.setCommand("/particle explosion_emitter ~4 ~-1 ~4");
+            commandBlockState.setCommand("/particle explosion_emitter ~4 ~1 ~4");
             commandState.update(true);
-        }
-
-        // I wish there was an API for this!
-        if (commandState instanceof CraftCommandBlock && commandBlockAccessor != null) {
-            try {
-                CraftCommandBlock craftBlock = (CraftCommandBlock) commandState;
-                // And this is also not accessible.. cry
-                Object tileEntity = commandBlockAccessor.get(craftBlock);
-                if (tileEntity instanceof CommandBlockEntity) {
-                    CommandBlockEntity blockEntity = (CommandBlockEntity) tileEntity;
-                    blockEntity.setAutomatic(true);
-                }
-            } catch (Exception ignore) {
-
-            }
         }
 
         BlockData observer1Data = plugin.getServer().createBlockData(Material.OBSERVER);
         BlockData observer2Data = plugin.getServer().createBlockData(Material.OBSERVER);
         if (observer1Data instanceof Directional) {
-            ((Directional)observer1Data).setFacing(BlockFace.WEST);
+            ((Directional)observer1Data).setFacing(BlockFace.EAST);
         }
         if (observer2Data instanceof Directional) {
-            ((Directional)observer2Data).setFacing(BlockFace.EAST);
+            ((Directional)observer2Data).setFacing(BlockFace.WEST);
         }
-        region.setBlockData(commandX - 1, commandY, commandZ, observer1Data);
-        region.setBlockData(commandX - 2, commandY, commandZ, observer2Data);
-        
+        region.setBlockData(commandX + 1, commandY, commandZ, observer1Data);
+        region.setBlockData(commandX + 2, commandY, commandZ, observer2Data);
 
+        BlockData airData = plugin.getServer().createBlockData(Material.AIR);
+        BlockData quartzData = plugin.getServer().createBlockData(Material.QUARTZ_BLOCK);
+        BlockData portalData = plugin.getServer().createBlockData(Material.END_PORTAL);
+        BlockData waterData = plugin.getServer().createBlockData(Material.WATER);
 
+        for (int relativeX = 5; relativeX <= 11; relativeX++) {
+            for (int relativeZ = 5; relativeZ <= 11; relativeZ++) {
+                final int x = chunkGlobalX + relativeX;
+                final int z = chunkGlobalZ + relativeZ;
 
-        /*
-        if (isExit && x >= 4 && x <= 12 && z >= 4 && z <= 12) {
-            if (x == 4 && z == 4) {
-            }
-            if (x == 4 || x == 12 || z == 4 || z == 12) {
-                BlockData water = plugin.getServer().createBlockData(Material.WATER);
-                Levelled levelled = (Levelled)water;
-                levelled.setLevel(levelled.getMaximumLevel() - 4);
-                chunk.setBlock(x, floorLevel, z, water);
-                chunk.setBlock(x, BEDROCK_LEVEL + 1, z, Material.QUARTZ_BLOCK);
-                chunk.setBlock(x, BEDROCK_LEVEL, z, Material.BEDROCK);
-            } else if (x == 5 || x == 11 || z == 5 || z == 11) {
-                BlockData water = plugin.getServer().createBlockData(Material.WATER);
-                Levelled levelled = (Levelled)water;
-                levelled.setLevel(4);
-                chunk.setBlock(x, floorLevel, z, water);
-                chunk.setBlock(x, floorLevel - 1, z, Material.WATER);
-                for (int y = floorLevel - 2; y > 10; y--) {
-                    chunk.setBlock(x, y, z, Material.QUARTZ_BLOCK);
+                // Hole in floor
+                for (int y = BEDROCK_LEVEL; y <= FLOOR_LEVEL; y++) {
+                    region.setBlockData(x, y, z, airData);
                 }
-            } else {
-                BlockData water = plugin.getServer().createBlockData(Material.WATER);
-                Levelled levelled = (Levelled)water;
-                levelled.setLevel(2);
-                chunk.setBlock(x, floorLevel - 1, z, water);
-                if (x == 6 || x == 10 || z == 6 || z == 10) {
-                    for (int y = floorLevel - 2; y > 10; y--) {
-                        chunk.setBlock(x, y, z, Material.WATER);
+
+                // Shaft downward
+                if (relativeX == 5 || relativeZ == 5 || relativeX == 11 || relativeZ == 11) {
+                    // Walls
+                    for (int y = EXIT_LEVEL; y < FLOOR_LEVEL; y++) {
+                        region.setBlockData(x, y, z, quartzData);
                     }
+
+                    // Waterfall
+                    region.setBlockData(x, FLOOR_LEVEL, z, waterData);
                 }
-                chunk.setBlock(x, 16, z, Material.END_PORTAL);
+
+                // Exit gateway
+                region.setBlockData(x, EXIT_LEVEL, z, portalData);
             }
-            continue;
         }
-        */
+    }
+
+    public static void checkNewChunk(Chunk chunk) {
+        Block checkObserver = chunk.getBlock(5, COMMAND_BLOCK_LEVEL, 4);
+        if (checkObserver.getType() == Material.OBSERVER) {
+            BlockData blockData = checkObserver.getBlockData();
+            if (blockData instanceof Powerable) {
+                Powerable powerable = (Powerable)blockData;
+                powerable.setPowered(true);
+                checkObserver.setBlockData(blockData);
+            }
+
+            // Trigger waterfall
+            chunk.getBlock(6, FLOOR_LEVEL, 6).setType(Material.WATER);
+            chunk.getBlock(10, FLOOR_LEVEL, 6).setType(Material.WATER);
+            chunk.getBlock(10, FLOOR_LEVEL, 10).setType(Material.WATER);
+            chunk.getBlock(6, FLOOR_LEVEL, 10).setType(Material.WATER);
+        }
     }
 }
