@@ -84,6 +84,8 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
         world.setGameRule(GameRules.SPAWN_MONSTERS, false);
         world.setGameRule(GameRules.SPAWN_PHANTOMS, false);
         world.setGameRule(GameRules.SPAWN_PATROLS, false);
+        world.setGameRule(GameRules.COMMAND_BLOCK_OUTPUT, false);
+        world.setGameRule(GameRules.COMMAND_BLOCKS_WORK, true);
 
         if (level.equals("ocean")) {
             world.setTime(18000);
