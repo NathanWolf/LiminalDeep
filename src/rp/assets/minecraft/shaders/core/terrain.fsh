@@ -16,13 +16,19 @@ const float SUN_BRIGHTNESS = 1.0;
 #moj_import <minecraft:fog.glsl>
 #moj_import <minecraft:globals.glsl>
 #moj_import <minecraft:chunksection.glsl>
+#moj_import <grayscale.glsl>
 
 uniform sampler2D Sampler0;
+uniform vec4 ColorModulator;
+uniform float FogStart;
+uniform float FogEnd;
 
 in float sphericalVertexDistance;
 in float cylindricalVertexDistance;
 in vec4 vertexColor;
 in vec2 texCoord0;
+in float vertexDistance;
+in float grayscaleFactor;
 
 out vec4 fragColor;
 
@@ -193,6 +199,7 @@ void main() {
 
     vec4 finalColor = vec4(saturated, color.a);
 
+    finalColor = grayscale(finalColor, grayscaleFactor);
     fragColor = apply_fog(finalColor, sphericalVertexDistance, cylindricalVertexDistance, FogEnvironmentalStart, FogEnvironmentalEnd, FogRenderDistanceStart, FogRenderDistanceEnd, FogColor);
 }
 
