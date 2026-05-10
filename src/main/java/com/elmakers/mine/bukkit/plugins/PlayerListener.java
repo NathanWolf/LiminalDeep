@@ -36,11 +36,13 @@ public class PlayerListener implements Listener {
     public void onPlayerPortal(PlayerPortalEvent event) {
         Player player = event.getPlayer();
         World world = player.getWorld();
-        switch (world.getName()) {
-            case "world_pools":
-                event.setTo(plugin.getSpawnLocation("ocean"));
-                break;
-            default:
+        LiminalGenerator generator = plugin.getGeneratorByWorld(world.getName());
+        if (generator != null) {
+            Location nextLevel = generator.toNextLevel(player);
+            if (nextLevel != null) {
+                event.setTo(nextLevel);
+                return;
+            }
         }
     }
 

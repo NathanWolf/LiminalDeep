@@ -1,0 +1,8 @@
+general:
+  version: 1
+
+pools:
+  world: world_pools
+
+ocean:
+  world: world_ocean

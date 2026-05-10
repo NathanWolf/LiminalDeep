@@ -1,13 +1,15 @@
 package com.elmakers.mine.bukkit.plugins;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.EndGateway;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.CaveVines;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.BlockPopulator;
-import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +18,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.List;
 import java.util.Random;
 
-public class PoolsGenerator extends ChunkGenerator {
+public class PoolsGenerator extends LiminalGenerator {
     private static final int BEDROCK_LEVEL = 60;
     public static final int FLOOR_LEVEL = BEDROCK_LEVEL + 2;
     private static final int ROOF_MIN_HEIGHT = 4;
@@ -31,7 +33,6 @@ public class PoolsGenerator extends ChunkGenerator {
     private static final double POOL_PROBABILITY = 0.75;
     private static final double DOUBLE_DOOR_PROBABILITY = 0.5;
     private static final double FOOD_PROBABILITY = 0.01;
-    private final LiminalWorldPlugin plugin;
     private final BiomeProvider biomeProvider;
 
     private static final Material[] FLOOR_BLOCK_SETS = {
@@ -44,8 +45,8 @@ public class PoolsGenerator extends ChunkGenerator {
         Material.DIORITE
     };
 
-    public PoolsGenerator(LiminalWorldPlugin plugin) {
-        this.plugin = plugin;
+    public PoolsGenerator(LiminalWorldPlugin plugin, ConfigurationSection generalConfig, ConfigurationSection config) {
+        super(plugin, generalConfig, config);
         biomeProvider = new DesertBiomeProvider();
     }
 
@@ -209,5 +210,15 @@ public class PoolsGenerator extends ChunkGenerator {
                 }
             }
         }
+    }
+
+    @Override
+    public Location getSpawnLocation(World world) {
+        return new Location(world, 8.5, PoolsGenerator.FLOOR_LEVEL + 1, 8.5);
+    }
+
+    @Override
+    public Location toNextLevel(Player player) {
+        return plugin.getSpawnLocation("ocean");
     }
 }

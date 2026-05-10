@@ -1,6 +1,8 @@
 package com.elmakers.mine.bukkit.plugins;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
@@ -9,24 +11,51 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class LiminalWorldPlugin extends JavaPlugin implements Listener {
+    private static int CURRENT_VERSION = 1;
+
+    private Map<String, LiminalGenerator> generators = new HashMap();
+    private Map<String, LiminalGenerator> worldGenerators = new HashMap();
+    private LiminalCommandExecutor commandExecutor;
+    private PlayerListener playerListener;
+    private ChunkListener chunkListener;
 
     @Override
     public void onEnable() {
         PluginManager pm = getServer().getPluginManager();
+        saveDefaultConfig();
+        ConfigurationSection configuration = getConfig();
+        ConfigurationSection generalConfig = configuration.getConfigurationSection("general");
+        if (generalConfig == null || generalConfig.getInt("version", 0) < CURRENT_VERSION) {
+            getLogger().severe("Plugin configuration is outdated. Disabling plugin. Please regenerate the config, make a copy first if you want to add any edits you've made.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        ConfigurationSection poolsConfig = configuration.getConfigurationSection("pools");
+        ConfigurationSection oceanConfig = configuration.getConfigurationSection("ocean");
 
-        new LiminalCommandExecutor(this);
-        pm.registerEvents(new PlayerListener(this), this);
-        pm.registerEvents(new ChunkListener(this), this);
+        generators.put("pools", new PoolsGenerator(this, generalConfig, poolsConfig));
+        generators.put("ocean", new OceanGenerator(this, generalConfig, oceanConfig));
+
+        for (Map.Entry<String, LiminalGenerator> entry : generators.entrySet()) {
+            worldGenerators.put(entry.getValue().getWorldName(), entry.getValue());
+        }
+
+        commandExecutor = new LiminalCommandExecutor(this);
+        playerListener = new PlayerListener(this);
+        pm.registerEvents(playerListener, this);
+        chunkListener = new ChunkListener(this);
+        pm.registerEvents(chunkListener, this);
         getServer().getScheduler().runTaskLater(this, () -> {
-            getWorld("pools");
-            getWorld("ocean");
+            for (String worldName : generators.keySet()) {
+                getWorld(worldName);
+            }
         }, 1L);
     }
 
@@ -44,15 +73,11 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
     }
 
     public Location getSpawnLocation(World world) {
-        final int maxY = world.getMaxHeight();
-        switch (world.getName()) {
-            case "world_pools":
-                return new Location(world, 8.5, PoolsGenerator.FLOOR_LEVEL + 1, 8.5);
-            case "world_ocean":
-                return new Location(world, 0, maxY - OceanGenerator.SEA_LEVEL + 1, 0);
-            default:
-                return world.getSpawnLocation();
+        final LiminalGenerator generator = worldGenerators.get(world.getName());
+        if (generator == null) {
+            return world.getSpawnLocation();
         }
+        return generator.getSpawnLocation(world);
     }
 
     public boolean sendToLevel(Player player, String level) {
@@ -65,21 +90,13 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
     }
 
     public World getWorld(String level) {
-        String worldName = "world_" + level;
+        final LiminalGenerator generator = generators.get(level);
+        if (generator == null) {
+            return null;
+        }
+        String worldName = generator.getWorldName();
         World world = getServer().getWorld(worldName);
         if (world == null) {
-            final ChunkGenerator generator;
-            switch (level) {
-                case "pools":
-                    generator = new PoolsGenerator(this);
-                    break;
-                case "ocean":
-                    generator = new OceanGenerator(this);
-                    break;
-                default:
-                    generator = null;
-                    break;
-            }
             world = Bukkit.createWorld(new WorldCreator(worldName).generator(generator));
         }
         if (world == null) {
@@ -110,5 +127,9 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
         if (rule != null) {
             world.setGameRule(rule, value);
         }
+    }
+
+    public LiminalGenerator getGeneratorByWorld(String worldName) {
+        return worldGenerators.get(worldName);
     }
 }
