@@ -16,14 +16,20 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.java>17</version.java>
-        <bukkit.version>26.1-R0.1-SNAPSHOT</bukkit.version>
+        <bukkit.version>26.1.1-R0.1-SNAPSHOT</bukkit.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>26.1-R0.1-SNAPSHOT</version>
+            <version>${bukkit.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>${bukkit.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -35,6 +41,10 @@
     </dependencies>
 
     <repositories>
+        <repository>
+            <id>elMakers</id>
+            <url>https://maven.elmakers.com/repository/</url>
+        </repository>
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>

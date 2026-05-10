@@ -1,16 +1,19 @@
 package com.elmakers.mine.bukkit.plugins;
 
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.EndGateway;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.CaveVines;
 import org.bukkit.generator.BiomeProvider;
+import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
+import java.util.List;
 import java.util.Random;
 
 public class PoolsGenerator extends ChunkGenerator {
@@ -34,6 +37,11 @@ public class PoolsGenerator extends ChunkGenerator {
     public PoolsGenerator(LiminalWorldPlugin plugin) {
         this.plugin = plugin;
         biomeProvider = new DesertBiomeProvider();
+    }
+
+    @Override
+    public List<BlockPopulator> getDefaultPopulators(World world) {
+        return List.of(new PoolsExitPopulator(plugin));
     }
 
     @Nullable
@@ -87,8 +95,13 @@ public class PoolsGenerator extends ChunkGenerator {
         final boolean hasZDoor = hasDoubleDoor || !doorXSide;
         final boolean hasFood = random.nextDouble() < FOOD_PROBABILITY;
         final int foodCorner = random.nextInt(4);
+
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
+                // Fill in the sub-floor first
+                chunk.setBlock(x, BEDROCK_LEVEL + 1, z, Material.QUARTZ_BLOCK);
+                chunk.setBlock(x, BEDROCK_LEVEL, z, Material.BEDROCK);
+
                 boolean isSunRoof = x >= 7 && z >= 7 && x <= 9 && z <= 9;
                 boolean isWalkway = (x > walkwayLeft && x < walkWayRight) || (z > walkwayLeft && z < walkWayRight);
                 if (x == 0 || z == 0) {
@@ -119,9 +132,10 @@ public class PoolsGenerator extends ChunkGenerator {
                     chunk.setBlock(x, floorLevel, z, Material.QUARTZ_BLOCK);
                 } else if (isSunRoof) {
                     // Island
-                    chunk.setBlock(x, floorLevel, z, Material.QUARTZ_BLOCK);
                     if (!hasIsland) {
                         chunk.setBlock(x, floorLevel, z, Material.WATER);
+                    } else {
+                        chunk.setBlock(x, floorLevel, z, Material.QUARTZ_BLOCK);
                     }
                 }  else {
                     // Water and roof
@@ -172,9 +186,6 @@ public class PoolsGenerator extends ChunkGenerator {
                 } else if (hasZWall && hasZWindow && z == zWindowLocation && x == 0) {
                     chunk.setBlock(x, floorLevel + 2, z, getWindowBlock());
                 }
-
-                chunk.setBlock(x, BEDROCK_LEVEL + 1, z, Material.QUARTZ_BLOCK);
-                chunk.setBlock(x, BEDROCK_LEVEL, z, Material.BEDROCK);
             }
         }
     }

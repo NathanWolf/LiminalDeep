@@ -19,6 +19,8 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        PoolsExitPopulator.initialize(this);
+
         PluginManager pm = getServer().getPluginManager();
 
         new LiminalCommandExecutor(this);
