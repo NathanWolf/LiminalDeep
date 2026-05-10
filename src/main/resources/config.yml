@@ -3,6 +3,7 @@ general:
 
 pools:
   world: world_pools
+  time: 6000
   bedrock_level: 60
   floor_level: 62
   roof_min_height: 4
@@ -39,6 +40,7 @@ pools:
 
 dark_pools:
   world: world_dark_pools
+  time: 10000
   bedrock_level: 60
   floor_level: 62
   roof_min_height: 4
@@ -75,6 +77,7 @@ dark_pools:
 
 ocean:
   world: world_ocean
+  time: 18000
   sky_height: 32
   sand_level: 6
   bedrock_level: 1

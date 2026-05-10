@@ -2,16 +2,12 @@ package com.elmakers.mine.bukkit.plugins;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.configuration.ConfigurationSection;
@@ -114,31 +110,8 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
         if (world == null) {
             return null;
         }
-
-        final Registry<GameRule> gameRules = getServer().getRegistry(GameRule.class);
-
-        setGameRule(gameRules, world, "ADVANCE_WEATHER", false);
-        setGameRule(gameRules, world, "ADVANCE_TIME", false);
-        setGameRule(gameRules, world, "SPAWN_MOBS", false);
-        setGameRule(gameRules, world, "SPAWN_MONSTERS", false);
-        setGameRule(gameRules, world, "SPAWN_PHANTOMS", false);
-        setGameRule(gameRules, world, "SPAWN_PATROLS", false);
-        setGameRule(gameRules, world, "COMMAND_BLOCK_OUTPUT", false);
-        setGameRule(gameRules, world, "COMMAND_BLOCKS_WORK", true);
-
-        if (level.equals("ocean")) {
-            world.setTime(18000);
-        } else {
-            world.setTime(6000);
-        }
+        generator.configureWorld(world);
         return world;
-    }
-
-    private void setGameRule(Registry<GameRule> gameRules, World world, String key, boolean value) {
-        GameRule rule = gameRules.get(NamespacedKey.minecraft(key.toLowerCase(Locale.ROOT)));
-        if (rule != null) {
-            world.setGameRule(rule, value);
-        }
     }
 
     public LiminalGenerator getGeneratorByWorld(String worldName) {
