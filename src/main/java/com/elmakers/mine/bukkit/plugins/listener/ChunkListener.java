@@ -5,7 +5,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 
 import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
-import com.elmakers.mine.bukkit.plugins.generator.PoolsExitPopulator;
 
 public class ChunkListener implements Listener {
     private final LiminalWorldPlugin plugin;
@@ -17,7 +16,7 @@ public class ChunkListener implements Listener {
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
         if (event.isNewChunk()) {
-            PoolsExitPopulator.checkNewChunk(event.getChunk());
+            plugin.checkNewChunk(event.getChunk());
         }
     }
 }

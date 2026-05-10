@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -47,9 +48,11 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
             return;
         }
         ConfigurationSection poolsConfig = configuration.getConfigurationSection("pools");
+        ConfigurationSection darkPoolsConfig = configuration.getConfigurationSection("dark_pools");
         ConfigurationSection oceanConfig = configuration.getConfigurationSection("ocean");
 
         generators.put("pools", new PoolsGenerator(this, generalConfig, poolsConfig));
+        generators.put("dark_pools", new PoolsGenerator(this, generalConfig, darkPoolsConfig));
         generators.put("ocean", new OceanGenerator(this, generalConfig, oceanConfig));
 
         for (Map.Entry<String, LiminalGenerator> entry : generators.entrySet()) {
@@ -153,5 +156,12 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
             materials[i] = Material.matchMaterial(materialName);
         }
         return materials;
+    }
+
+    public void checkNewChunk(Chunk chunk) {
+        LiminalGenerator generator = worldGenerators.get(chunk.getWorld().getName());
+        if (generator != null) {
+            generator.checkNewChunk(chunk);
+        }
     }
 }

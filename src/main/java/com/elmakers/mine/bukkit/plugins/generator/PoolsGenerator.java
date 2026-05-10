@@ -1,5 +1,6 @@
 package com.elmakers.mine.bukkit.plugins.generator;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -36,6 +37,7 @@ public class PoolsGenerator extends LiminalGenerator {
     private double DOUBLE_DOOR_PROBABILITY = 0.5;
     private double FOOD_PROBABILITY = 0.01;
     private final BiomeProvider biomeProvider;
+    private final PoolsExitPopulator exitPopulator;
 
     private Material[] FLOOR_BLOCKS = {
         Material.BLUE_CONCRETE,
@@ -59,6 +61,7 @@ public class PoolsGenerator extends LiminalGenerator {
     public PoolsGenerator(LiminalWorldPlugin plugin, ConfigurationSection generalConfig, ConfigurationSection config) {
         super(plugin, generalConfig, config);
         biomeProvider = new DesertBiomeProvider();
+        exitPopulator = new PoolsExitPopulator(plugin, config);
 
         BEDROCK_LEVEL = config.getInt("bedrock_level", BEDROCK_LEVEL);
         FLOOR_LEVEL = config.getInt("floor_level", FLOOR_LEVEL);
@@ -83,7 +86,7 @@ public class PoolsGenerator extends LiminalGenerator {
 
     @Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
-        return List.of(new PoolsExitPopulator(plugin));
+        return List.of(exitPopulator);
     }
 
     @Nullable
@@ -253,6 +256,11 @@ public class PoolsGenerator extends LiminalGenerator {
 
     @Override
     public Location toNextLevel(Player player) {
-        return plugin.getSpawnLocation("ocean");
+        return plugin.getSpawnLocation("dark_pools");
+    }
+
+    @Override
+    public void checkNewChunk(Chunk chunk) {
+        exitPopulator.checkNewChunk(chunk);
     }
 }

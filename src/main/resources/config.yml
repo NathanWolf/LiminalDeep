@@ -5,8 +5,8 @@ pools:
   world: world_pools
   bedrock_level: 60
   floor_level: 62
-  roof_min_height: 16
-  roof_max_height: 64
+  roof_min_height: 4
+  roof_max_height: 10
   doorway_min_height: 2
   doorway_max_height: 4
   doorway_max_width_half: 3
@@ -23,11 +23,19 @@ pools:
   wall_blacks:
     - polished_diorite
     - diorite
+    - quartz_block
   ceiling_blacks:
     - polished_diorite
     - diorite
+    - quartz_block
   light_blocks:
     - sea_lantern
+  exit:
+    min_distance: 640
+    max_distance: 3200
+    max_probability: 0.
+    command_blocks: true
+    exit_level: -32
 
 dark_pools:
   world: world_dark_pools

@@ -1,5 +1,6 @@
 package com.elmakers.mine.bukkit.plugins.generator;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,5 +26,9 @@ public abstract class LiminalGenerator extends ChunkGenerator {
 
     public Location toNextLevel(Player player) {
         return null;
+    }
+
+    public void checkNewChunk(Chunk chunk) {
+
     }
 }
