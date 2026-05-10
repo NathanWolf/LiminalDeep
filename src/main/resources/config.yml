@@ -34,7 +34,7 @@ pools:
   exit:
     min_distance: 640
     max_distance: 3200
-    max_probability: 0.
+    max_probability: 0.1
     command_blocks: true
     exit_level: -32
 

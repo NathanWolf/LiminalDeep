@@ -48,7 +48,7 @@ public class PoolsExitPopulator extends LiminalPopulator {
 
     @Override
     public void populate(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, LimitedRegion region) {
-        final int distanceSquared = (chunkX * 16) * (chunkX * 16) + (chunkZ * 16) * (chunkZ * 16);
+        final long distanceSquared = (long)(chunkX * 16) * (chunkX * 16) + (chunkZ * 16) * (chunkZ * 16);
         final double exitProbability = distanceSquared < EXIT_MIN_DISTANCE_SQUARED ? 0 :
                 EXIT_MAX_PROBABILITY * (distanceSquared - EXIT_MIN_DISTANCE_SQUARED) / (EXIT_MAX_DISTANCE_SQUARED - EXIT_MIN_DISTANCE_SQUARED);
         final boolean isExit = random.nextDouble() < exitProbability;
