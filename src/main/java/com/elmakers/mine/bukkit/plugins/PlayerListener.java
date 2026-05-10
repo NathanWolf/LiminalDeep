@@ -1,11 +1,13 @@
 package com.elmakers.mine.bukkit.plugins;
 
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerListener implements Listener {
@@ -15,7 +17,7 @@ public class PlayerListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         World world = player.getWorld();
@@ -39,7 +41,7 @@ public class PlayerListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Location spawnLocation = plugin.getSpawnLocation("pools");
         if (spawnLocation != null) {
-            event.getPlayer().setRespawnLocation(spawnLocation, true);
+            event.getEntity().setRespawnLocation(spawnLocation, true);
         }
     }
 }
