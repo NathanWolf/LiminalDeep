@@ -1,8 +1,12 @@
 package com.elmakers.mine.bukkit.plugins;
 
+import java.util.Locale;
+
 import org.bukkit.Bukkit;
-import org.bukkit.GameRules;
+import org.bukkit.GameRule;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
@@ -10,7 +14,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jspecify.annotations.NonNull;
 
 public class LiminalWorldPlugin extends JavaPlugin implements Listener {
 
@@ -78,14 +81,17 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
             }
             world = Bukkit.createWorld(new WorldCreator(worldName).generator(generator));
         }
-        world.setGameRule(GameRules.ADVANCE_WEATHER, false);
-        world.setGameRule(GameRules.ADVANCE_TIME, false);
-        world.setGameRule(GameRules.SPAWN_MOBS, false);
-        world.setGameRule(GameRules.SPAWN_MONSTERS, false);
-        world.setGameRule(GameRules.SPAWN_PHANTOMS, false);
-        world.setGameRule(GameRules.SPAWN_PATROLS, false);
-        world.setGameRule(GameRules.COMMAND_BLOCK_OUTPUT, false);
-        world.setGameRule(GameRules.COMMAND_BLOCKS_WORK, true);
+
+        final Registry<GameRule> gameRules = getServer().getRegistry(GameRule.class);
+
+        setGameRule(gameRules, world, "ADVANCE_WEATHER", false);
+        setGameRule(gameRules, world, "ADVANCE_TIME", false);
+        setGameRule(gameRules, world, "SPAWN_MOBS", false);
+        setGameRule(gameRules, world, "SPAWN_MONSTERS", false);
+        setGameRule(gameRules, world, "SPAWN_PHANTOMS", false);
+        setGameRule(gameRules, world, "SPAWN_PATROLS", false);
+        setGameRule(gameRules, world, "COMMAND_BLOCK_OUTPUT", false);
+        setGameRule(gameRules, world, "COMMAND_BLOCKS_WORK", true);
 
         if (level.equals("ocean")) {
             world.setTime(18000);
@@ -93,5 +99,12 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
             world.setTime(6000);
         }
         return world;
+    }
+
+    private void setGameRule(Registry<GameRule> gameRules, World world, String key, boolean value) {
+        GameRule rule = gameRules.get(NamespacedKey.minecraft(key.toLowerCase(Locale.ROOT)));
+        if (rule != null) {
+            world.setGameRule(rule, value);
+        }
     }
 }
