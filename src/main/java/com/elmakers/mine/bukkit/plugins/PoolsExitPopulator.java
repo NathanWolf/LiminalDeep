@@ -66,6 +66,16 @@ public class PoolsExitPopulator extends BlockPopulator {
         region.setBlockData(commandX + 1, commandY, commandZ, observer1Data);
         region.setBlockData(commandX + 2, commandY, commandZ, observer2Data);
 
+        // Sounds
+        region.setBlockData(commandX + 3, commandY, commandZ, commandBlock);
+        commandState = region.getBlockState(commandX + 3, commandY, commandZ);
+        if (commandState instanceof org.bukkit.block.CommandBlock) {
+            org.bukkit.block.CommandBlock commandBlockState = (org.bukkit.block.CommandBlock)commandState;
+            commandBlockState.setCommand("/playsound minecraft:entity.boat.paddle_water ambient @p ~4 ~1 ~4 10");
+            commandState.update(true);
+        }
+
+
         BlockData airData = plugin.getServer().createBlockData(Material.AIR);
         BlockData quartzData = plugin.getServer().createBlockData(Material.QUARTZ_BLOCK);
         BlockData portalData = plugin.getServer().createBlockData(Material.END_PORTAL);
