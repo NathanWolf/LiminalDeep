@@ -82,6 +82,9 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
             }
             world = Bukkit.createWorld(new WorldCreator(worldName).generator(generator));
         }
+        if (world == null) {
+            return null;
+        }
 
         final Registry<GameRule> gameRules = getServer().getRegistry(GameRule.class);
 

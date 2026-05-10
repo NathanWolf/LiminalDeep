@@ -12,14 +12,6 @@ Some textures taken from Pool Rooms by CatFries:
 
 https://www.planetminecraft.com/texture-pack/poolrooms/
 
-Using some core shaders from:
-
-https://github.com/JNNGL/vanilla-shaders
-
-Wavy water (didn't use, but would like to!)
-
-https://modrinth.com/resourcepack/waves?version=1.21.10
-
 No Light, No Color:
 
 https://modrinth.com/resourcepack/no-light-no-color
@@ -27,5 +19,3 @@ https://modrinth.com/resourcepack/no-light-no-color
 ReShaded:
 
 https://modrinth.com/resourcepack/re-shaded?version=26.1.1#download
-
-

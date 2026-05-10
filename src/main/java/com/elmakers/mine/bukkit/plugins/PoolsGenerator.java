@@ -34,6 +34,16 @@ public class PoolsGenerator extends ChunkGenerator {
     private final LiminalWorldPlugin plugin;
     private final BiomeProvider biomeProvider;
 
+    private static final Material[] FLOOR_BLOCK_SETS = {
+        Material.BLUE_CONCRETE,
+        Material.LIGHT_BLUE_CONCRETE
+    };
+
+    private static final Material[] WALL_BLOCK_SETS = {
+            Material.POLISHED_DIORITE,
+            Material.DIORITE
+    };
+
     public PoolsGenerator(LiminalWorldPlugin plugin) {
         this.plugin = plugin;
         biomeProvider = new DesertBiomeProvider();
@@ -95,62 +105,73 @@ public class PoolsGenerator extends ChunkGenerator {
         final boolean hasZDoor = hasDoubleDoor || !doorXSide;
         final boolean hasFood = random.nextDouble() < FOOD_PROBABILITY;
         final int foodCorner = random.nextInt(4);
+        Material floorBlock = FLOOR_BLOCK_SETS[random.nextInt(FLOOR_BLOCK_SETS.length)];
+        Material wallBlock = WALL_BLOCK_SETS[random.nextInt(WALL_BLOCK_SETS.length)];
+        Material ceilingBlock = WALL_BLOCK_SETS[random.nextInt(WALL_BLOCK_SETS.length)];
+        final int lightsFirst = walkwayLeft / 2;
+        final int lightsSecond = 16 - lightsFirst;
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 // Fill in the sub-floor first
-                chunk.setBlock(x, BEDROCK_LEVEL + 1, z, Material.QUARTZ_BLOCK);
+                chunk.setBlock(x, BEDROCK_LEVEL + 1, z, floorBlock);
                 chunk.setBlock(x, BEDROCK_LEVEL, z, Material.BEDROCK);
 
                 boolean isSunRoof = x >= 7 && z >= 7 && x <= 9 && z <= 9;
                 boolean isWalkway = (x > walkwayLeft && x < walkWayRight) || (z > walkwayLeft && z < walkWayRight);
                 if (x == 0 || z == 0) {
+                    chunk.setBlock(x, floorLevel, z, floorBlock);
                     if ((hasXWall && z == 0) || (hasZWall && x == 0)) {
                         // Walls and doorway
                         boolean isDoorway = (x >= doorwayLeft && x <= doorwayRight) || (z >= doorwayLeft && z <= doorwayRight);
                         if (!hasXDoor && z == 0) isDoorway = false;
                         else if (!hasZDoor && x == 0) isDoorway = false;
-                        for (int y = floorLevel; y <= roofMaxLevel; y++) {
-                            if (isDoorway && y <= doorwayLevel && y > floorLevel) continue;
-                            chunk.setBlock(x, y, z, Material.QUARTZ_BLOCK);
+                        for (int y = floorLevel + 1; y <= roofMaxLevel; y++) {
+                            if (isDoorway && y <= doorwayLevel) continue;
+                            chunk.setBlock(x, y, z, wallBlock);
                         }
                     } else {
-                        chunk.setBlock(x, floorLevel, z, Material.QUARTZ_BLOCK);
                         for (int y = roofLevel; y <= roofMaxLevel; y++) {
-                            chunk.setBlock(x, y, z, Material.QUARTZ_BLOCK);
+                            chunk.setBlock(x, y, z, wallBlock);
                         }
                     }
                 } else if (x == 1 || z == 1 || x == 15 || z == 15) {
                     // Border walkway
-                    chunk.setBlock(x, floorLevel, z, Material.QUARTZ_BLOCK);
-                    chunk.setBlock(x, roofLevel, z, Material.QUARTZ_BLOCK);
+                    chunk.setBlock(x, floorLevel, z, floorBlock);
+                    chunk.setBlock(x, roofLevel, z, ceilingBlock);
                 } else if (isWalkway) {
                     // Pathways
                     if (!isSunRoof) {
-                        chunk.setBlock(x, roofLevel, z, Material.QUARTZ_BLOCK);
+                        chunk.setBlock(x, roofLevel, z, ceilingBlock);
                     }
-                    chunk.setBlock(x, floorLevel, z, Material.QUARTZ_BLOCK);
+                    chunk.setBlock(x, floorLevel, z, floorBlock);
                 } else if (isSunRoof) {
                     // Island
                     if (!hasIsland) {
                         chunk.setBlock(x, floorLevel, z, Material.WATER);
+                        if (x == 8 && z == 8) {
+                            chunk.setBlock(x, floorLevel - 1, z, Material.SEA_LANTERN);
+                        }
                     } else {
-                        chunk.setBlock(x, floorLevel, z, Material.QUARTZ_BLOCK);
+                        chunk.setBlock(x, floorLevel, z, floorBlock);
                     }
-                }  else {
+                } else {
                     // Water and roof
-                    chunk.setBlock(x, roofLevel, z, Material.QUARTZ_BLOCK);
+                    chunk.setBlock(x, roofLevel, z, ceilingBlock);
                     if (hasPools) {
                         chunk.setBlock(x, floorLevel, z, Material.WATER);
+                        if ((x == lightsFirst || x == lightsSecond) && (z == lightsFirst || z == lightsSecond)) {
+                            chunk.setBlock(x, floorLevel - 1, z, Material.SEA_LANTERN);
+                        }
                     } else {
-                        chunk.setBlock(x, floorLevel, z, Material.QUARTZ_BLOCK);
+                        chunk.setBlock(x, floorLevel, z, floorBlock);
                     }
                 }
 
                 // Extend ceiling up
                 if (!isSunRoof) {
                     for (int y = roofLevel + 1; y <= roofMaxLevel; y++) {
-                        chunk.setBlock(x, y, z, Material.QUARTZ_BLOCK);
+                        chunk.setBlock(x, y, z, ceilingBlock);
                     }
                 }
 
