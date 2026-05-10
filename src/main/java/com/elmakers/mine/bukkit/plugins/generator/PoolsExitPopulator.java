@@ -12,13 +12,12 @@ import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.Powerable;
 import org.bukkit.block.data.type.CommandBlock;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
 
 import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
 
-public class PoolsExitPopulator extends BlockPopulator {
+public class PoolsExitPopulator extends LiminalPopulator {
     private int EXIT_MIN_DISTANCE_SQUARED = 640 * 640;
     private int EXIT_MAX_DISTANCE_SQUARED = 3200 * 3200;
     private double EXIT_MAX_PROBABILITY = 0.3;
@@ -28,10 +27,8 @@ public class PoolsExitPopulator extends BlockPopulator {
     private int EXIT_LEVEL = -32;
     private boolean COMMAND_BLOCKS_ENABLED = true;
 
-    private final LiminalWorldPlugin plugin;
-
     public PoolsExitPopulator(LiminalWorldPlugin plugin, ConfigurationSection config) {
-        this.plugin = plugin;
+        super(plugin);
 
         BEDROCK_LEVEL = config.getInt("bedrock_level", BEDROCK_LEVEL);
         FLOOR_LEVEL = config.getInt("floor_level", FLOOR_LEVEL);

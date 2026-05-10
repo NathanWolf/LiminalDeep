@@ -12,6 +12,11 @@ public class DarkPoolsGenerator extends PoolsGenerator {
     }
 
     @Override
+    protected LiminalPopulator createPopulator(ConfigurationSection config) {
+        return new DarkPoolsExitPopulator(plugin, config);
+    }
+
+    @Override
     public Location toNextLevel(Player player) {
         return plugin.getSpawnLocation("ocean");
     }

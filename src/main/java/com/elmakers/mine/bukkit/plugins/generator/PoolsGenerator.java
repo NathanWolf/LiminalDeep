@@ -37,7 +37,7 @@ public class PoolsGenerator extends LiminalGenerator {
     private double DOUBLE_DOOR_PROBABILITY = 0.5;
     private double FOOD_PROBABILITY = 0.01;
     private final BiomeProvider biomeProvider;
-    private final PoolsExitPopulator exitPopulator;
+    private final LiminalPopulator exitPopulator;
 
     private Material[] FLOOR_BLOCKS = {
         Material.BLUE_CONCRETE,
@@ -61,7 +61,7 @@ public class PoolsGenerator extends LiminalGenerator {
     public PoolsGenerator(LiminalWorldPlugin plugin, ConfigurationSection generalConfig, ConfigurationSection config) {
         super(plugin, generalConfig, config);
         biomeProvider = new DesertBiomeProvider();
-        exitPopulator = new PoolsExitPopulator(plugin, config);
+        exitPopulator = createPopulator(config);
 
         BEDROCK_LEVEL = config.getInt("bedrock_level", BEDROCK_LEVEL);
         FLOOR_LEVEL = config.getInt("floor_level", FLOOR_LEVEL);
@@ -82,6 +82,10 @@ public class PoolsGenerator extends LiminalGenerator {
         WALL_BLOCKS = plugin.getMaterials(config, "wall_blocks", WALL_BLOCKS);
         CEILING_BLOCKS = plugin.getMaterials(config, "ceiling_blocks", CEILING_BLOCKS);
         LIGHT_BLOCKS = plugin.getMaterials(config, "light_blocks", LIGHT_BLOCKS);
+    }
+
+    protected LiminalPopulator createPopulator(ConfigurationSection config) {
+        return new PoolsExitPopulator(plugin, config);
     }
 
     @Override
