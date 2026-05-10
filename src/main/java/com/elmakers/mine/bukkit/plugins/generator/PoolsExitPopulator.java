@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins;
+package com.elmakers.mine.bukkit.plugins.generator;
 
 import java.util.Random;
 
@@ -14,6 +14,8 @@ import org.bukkit.block.data.type.CommandBlock;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
+
+import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
 
 public class PoolsExitPopulator extends BlockPopulator {
     private static final int EXIT_MIN_DISTANCE_SQUARED = 640 * 640;

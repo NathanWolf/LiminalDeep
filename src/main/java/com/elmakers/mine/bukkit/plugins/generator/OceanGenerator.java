@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins;
+package com.elmakers.mine.bukkit.plugins.generator;
 
 import java.util.Random;
 
@@ -10,6 +10,8 @@ import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
 
 public class OceanGenerator extends LiminalGenerator {
     private int SKY_HEIGHT = 32;

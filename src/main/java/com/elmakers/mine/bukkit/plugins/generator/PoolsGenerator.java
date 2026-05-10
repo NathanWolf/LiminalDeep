@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins;
+package com.elmakers.mine.bukkit.plugins.generator;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,6 +17,8 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Random;
+
+import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
 
 public class PoolsGenerator extends LiminalGenerator {
     private int BEDROCK_LEVEL = 60;

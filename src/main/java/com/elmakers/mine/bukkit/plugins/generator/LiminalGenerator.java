@@ -1,10 +1,12 @@
-package com.elmakers.mine.bukkit.plugins;
+package com.elmakers.mine.bukkit.plugins.generator;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
+
+import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
 
 public abstract class LiminalGenerator extends ChunkGenerator {
     protected final String worldName;

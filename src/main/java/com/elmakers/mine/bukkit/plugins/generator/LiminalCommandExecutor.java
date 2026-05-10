@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins;
+package com.elmakers.mine.bukkit.plugins.generator;
 
 import java.util.List;
 
@@ -9,6 +9,8 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+
+import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
 
 public class LiminalCommandExecutor implements TabExecutor {
     private final LiminalWorldPlugin plugin;
