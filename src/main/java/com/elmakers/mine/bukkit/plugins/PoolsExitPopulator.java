@@ -16,8 +16,8 @@ import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
 
 public class PoolsExitPopulator extends BlockPopulator {
-    private static final int EXIT_MIN_DISTANCE_SQUARED = 10 * 10;
-    private static final int EXIT_MAX_DISTANCE_SQUARED = 20 * 20;
+    private static final int EXIT_MIN_DISTANCE_SQUARED = 640 * 640;
+    private static final int EXIT_MAX_DISTANCE_SQUARED = 1600 * 1600;
     private static final int BEDROCK_LEVEL = 60;
     private static final int COMMAND_BLOCK_LEVEL = BEDROCK_LEVEL - 2;
     private static final int FLOOR_LEVEL = BEDROCK_LEVEL + 2;
