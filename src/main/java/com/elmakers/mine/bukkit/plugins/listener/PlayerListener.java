@@ -41,10 +41,10 @@ public class PlayerListener implements Listener {
         World world = player.getWorld();
         LiminalGenerator generator = plugin.getGeneratorByWorld(world.getName());
         if (generator != null) {
-            Location nextLevel = generator.toNextLevel(player);
+            String nextLevel = generator.getNextLevel();
             if (nextLevel != null) {
-                event.setTo(nextLevel);
-                return;
+                Location entryLocation = plugin.getEntryLocation(nextLevel);
+                event.setTo(entryLocation);
             }
         }
     }

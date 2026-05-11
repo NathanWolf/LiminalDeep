@@ -88,6 +88,22 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
         return generator.getSpawnLocation(world);
     }
 
+    public Location getEntryLocation(String level) {
+        World poolsWorld = getWorld(level);
+        if (poolsWorld == null) {
+            return null;
+        }
+        return getEntryLocation(poolsWorld);
+    }
+
+    public Location getEntryLocation(World world) {
+        final LiminalGenerator generator = worldGenerators.get(world.getName());
+        if (generator == null) {
+            return world.getSpawnLocation();
+        }
+        return generator.getEntryLocation(world);
+    }
+
     public boolean sendToLevel(Player player, String level) {
         Location spawnLocation = getSpawnLocation(level);
         if (spawnLocation == null) {

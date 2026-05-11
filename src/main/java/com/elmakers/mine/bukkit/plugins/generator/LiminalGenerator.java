@@ -9,7 +9,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 
 import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
@@ -31,7 +30,13 @@ public abstract class LiminalGenerator extends ChunkGenerator {
 
     public abstract Location getSpawnLocation(World world);
 
-    public Location toNextLevel(Player player) {
+    public Location getEntryLocation(World world) {
+        Location location = getSpawnLocation(world);
+        location.setY(world.getMaxHeight() - 16);
+        return location;
+    }
+
+    public String getNextLevel() {
         return null;
     }
 

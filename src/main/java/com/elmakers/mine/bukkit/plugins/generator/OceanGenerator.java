@@ -58,4 +58,11 @@ public class OceanGenerator extends LiminalGenerator {
         final int maxY = world.getMaxHeight();
         return new Location(world, 0, maxY - SKY_HEIGHT + 1, 0);
     }
+
+    @Override
+    public Location getEntryLocation(World world) {
+        Location location = getSpawnLocation(world);
+        location.setY(world.getMaxHeight());
+        return location;
+    }
 }

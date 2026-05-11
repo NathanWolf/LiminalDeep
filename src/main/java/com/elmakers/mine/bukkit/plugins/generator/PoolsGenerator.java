@@ -118,6 +118,7 @@ public class PoolsGenerator extends LiminalGenerator {
 
     @Override
     public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunk) {
+        final boolean isStartingChunk = chunkX == 0 && chunkZ == 0;
         final int floorLevel = FLOOR_LEVEL;
         final int roofLevel = floorLevel + random.nextInt(ROOF_MAX_HEIGHT - ROOF_MIN_HEIGHT) + ROOF_MIN_HEIGHT;
         final int roofMaxLevel = floorLevel + ROOF_MAX_HEIGHT;
@@ -125,14 +126,14 @@ public class PoolsGenerator extends LiminalGenerator {
         final int doorwayWidthHalf = random.nextInt(DOORWAY_MAX_WIDTH_HALF);
         final int doorwayLeft = 7 - doorwayWidthHalf;
         final int doorwayRight = 9 + doorwayWidthHalf;
-        final int walkwayWidthHalf = random.nextInt(WALKWAY_MAX_WIDTH_HALF);
+        final int walkwayWidthHalf = isStartingChunk ? 0 : random.nextInt(WALKWAY_MAX_WIDTH_HALF);
         final int walkwayLeft = 8 - walkwayWidthHalf;
         final int walkWayRight = 8 + walkwayWidthHalf;
         final boolean hasXWall = random.nextDouble() < WALL_PROBABILITY;
         final boolean hasZWall = random.nextDouble() < WALL_PROBABILITY;
         final boolean hasXWindow = random.nextDouble() < WINDOW_PROBABILITY;
         final boolean hasZWindow = random.nextDouble() < WINDOW_PROBABILITY;
-        final boolean hasIsland = random.nextDouble() < ISLAND_PROBABILITY;
+        final boolean hasIsland = !isStartingChunk && random.nextDouble() < ISLAND_PROBABILITY;
         final boolean hasPools = random.nextDouble() < POOL_PROBABILITY;
         int xWindowLocation = random.nextInt(4 - doorwayWidthHalf) + 1;
         if (random.nextDouble() > 0.5) xWindowLocation = 15 - xWindowLocation;
@@ -212,7 +213,8 @@ public class PoolsGenerator extends LiminalGenerator {
 
                 // Extend ceiling up
                 if (!isSunRoof) {
-                    for (int y = roofLevel + 1; y <= roofMaxLevel; y++) {
+                    final int ceilingHeight = isStartingChunk ? worldInfo.getMaxHeight() : roofMaxLevel;
+                    for (int y = roofLevel + 1; y <= ceilingHeight; y++) {
                         chunk.setBlock(x, y, z, ceilingBlock);
                     }
                 }
@@ -259,8 +261,8 @@ public class PoolsGenerator extends LiminalGenerator {
     }
 
     @Override
-    public Location toNextLevel(Player player) {
-        return plugin.getSpawnLocation("dark_pools");
+    public String getNextLevel() {
+        return "dark_pools";
     }
 
     @Override
