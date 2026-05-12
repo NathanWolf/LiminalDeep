@@ -16,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.elmakers.mine.bukkit.plugins.generator.LiminalCommandExecutor;
 import com.elmakers.mine.bukkit.plugins.generator.LiminalGenerator;
 import com.elmakers.mine.bukkit.plugins.generator.OceanGenerator;
 import com.elmakers.mine.bukkit.plugins.generator.PoolsGenerator;
