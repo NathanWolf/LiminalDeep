@@ -24,6 +24,7 @@ public abstract class LiminalGenerator extends ChunkGenerator {
     protected final String worldName;
     protected final LiminalWorldPlugin plugin;
     protected final int time;
+    protected final boolean rain;
     protected final BiomeProvider biomeProvider;
     protected final String title;
     protected final String nextLevel;
@@ -37,6 +38,7 @@ public abstract class LiminalGenerator extends ChunkGenerator {
         title = config.getString("title");
         titleDelay = config.getInt("title_delay", generalConfig.getInt("title_delay", 0));
         nextLevel = config.getString("next_level");
+        rain = config.getBoolean("rain");
     }
 
     protected BiomeProvider createDefaultBiomeProvider(ConfigurationSection config) {
@@ -93,6 +95,8 @@ public abstract class LiminalGenerator extends ChunkGenerator {
         GameRule rule = gameRules.get(NamespacedKey.minecraft(key.toLowerCase(Locale.ROOT)));
         if (rule != null) {
             world.setGameRule(rule, value);
+        } else {
+            plugin.getLogger().warning("Invalid game rule: " + key);
         }
     }
 
@@ -108,6 +112,7 @@ public abstract class LiminalGenerator extends ChunkGenerator {
         setGameRule(gameRules, world, "COMMAND_BLOCK_OUTPUT", false);
         setGameRule(gameRules, world, "COMMAND_BLOCKS_WORK", true);
 
+        world.setStorm(rain);
         world.setTime(time);
     }
 }

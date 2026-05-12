@@ -47,7 +47,8 @@ dark_pools:
   world: world_dark_pools
   next_level: ocean
   title: "&3The Dark Pools"
-  time: 10000
+  time: 14000
+  rain: true
   biome: lush_caves
   bedrock_level: 20
   hallway_min_width_half: 0
