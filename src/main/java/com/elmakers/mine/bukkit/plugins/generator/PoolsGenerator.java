@@ -27,6 +27,8 @@ public class PoolsGenerator extends LiminalGenerator {
     private int DOORWAY_MAX_HEIGHT = 4;
     private int DOORWAY_MAX_WIDTH_HALF = 3;
     private int WALKWAY_MAX_WIDTH_HALF = 5;
+    private int HALLWAY_MAX_WIDTH_HALF = 0;
+    private int HALLWAY_MIN_WIDTH_HALF = 0;
     private double WALL_PROBABILITY = 0.75;
     private double WINDOW_PROBABILITY = 0.3;
     private double ISLAND_PROBABILITY = 0.75;
@@ -72,6 +74,8 @@ public class PoolsGenerator extends LiminalGenerator {
         POOL_PROBABILITY = config.getDouble("pool_probability", POOL_PROBABILITY);
         DOUBLE_DOOR_PROBABILITY = config.getDouble("double_door_probability", DOUBLE_DOOR_PROBABILITY);
         FOOD_PROBABILITY = config.getDouble("food_probability", FOOD_PROBABILITY);
+        HALLWAY_MAX_WIDTH_HALF = config.getInt("hallway_max_width_half", HALLWAY_MAX_WIDTH_HALF);
+        HALLWAY_MIN_WIDTH_HALF = config.getInt("hallway_min_width_half", HALLWAY_MIN_WIDTH_HALF);
 
         FLOOR_BLOCKS = plugin.getMaterials(config, "floor_blocks", FLOOR_BLOCKS);
         WALL_BLOCKS = plugin.getMaterials(config, "wall_blocks", WALL_BLOCKS);
@@ -135,10 +139,10 @@ public class PoolsGenerator extends LiminalGenerator {
         final boolean hasZDoor = hasDoubleDoor || !doorXSide;
         final boolean hasFood = random.nextDouble() < FOOD_PROBABILITY;
         final int foodCorner = random.nextInt(4);
-        Material floorBlock = FLOOR_BLOCKS[random.nextInt(FLOOR_BLOCKS.length)];
-        Material wallBlock = WALL_BLOCKS[random.nextInt(WALL_BLOCKS.length)];
-        Material ceilingBlock = CEILING_BLOCKS[random.nextInt(CEILING_BLOCKS.length)];
-        Material lightBlock = LIGHT_BLOCKS[random.nextInt(LIGHT_BLOCKS.length)];
+        final Material floorBlock = FLOOR_BLOCKS[random.nextInt(FLOOR_BLOCKS.length)];
+        final Material wallBlock = WALL_BLOCKS[random.nextInt(WALL_BLOCKS.length)];
+        final Material ceilingBlock = CEILING_BLOCKS[random.nextInt(CEILING_BLOCKS.length)];
+        final Material lightBlock = LIGHT_BLOCKS[random.nextInt(LIGHT_BLOCKS.length)];
         final int lightsFirst = walkwayLeft / 2 + 1;
         final int lightsSecond = 16 - lightsFirst;
 
@@ -150,8 +154,8 @@ public class PoolsGenerator extends LiminalGenerator {
                     chunk.setBlock(x, y, z, floorBlock);
                 }
 
-                boolean isSunRoof = x >= 7 && z >= 7 && x <= 9 && z <= 9;
-                boolean isWalkway = (x > walkwayLeft && x < walkWayRight) || (z > walkwayLeft && z < walkWayRight);
+                final boolean isSunRoof = x >= 7 && z >= 7 && x <= 9 && z <= 9;
+                final boolean isWalkway = (x > walkwayLeft && x < walkWayRight) || (z > walkwayLeft && z < walkWayRight);
                 if (x == 0 || z == 0) {
                     chunk.setBlock(x, floorLevel, z, floorBlock);
                     if ((hasXWall && z == 0) || (hasZWall && x == 0)) {
@@ -240,6 +244,22 @@ public class PoolsGenerator extends LiminalGenerator {
                     chunk.setBlock(x, floorLevel + 2, z, getWindowBlock());
                 } else if (hasZWall && hasZWindow && z == zWindowLocation && x == 0) {
                     chunk.setBlock(x, floorLevel + 2, z, getWindowBlock());
+                }
+
+                // Fill in hallways after
+                boolean isCenterWalkway = isWalkway || x == 8 || z == 8;
+                if (!isCenterWalkway && (HALLWAY_MAX_WIDTH_HALF > 0 || HALLWAY_MIN_WIDTH_HALF > 0)) {
+                    int hallwayLeft = 8 - HALLWAY_MAX_WIDTH_HALF;
+                    int hallwayRight = 8 + HALLWAY_MAX_WIDTH_HALF;
+                    if (isStartingChunk) {
+                        hallwayLeft = Math.min(hallwayLeft, 6);
+                        hallwayRight = Math.max(hallwayRight, 10);
+                    }
+                    if (x < hallwayLeft || x > hallwayRight || z < hallwayLeft || z > hallwayRight) {
+                        for (int y = floorLevel; y <= roofLevel; y++) {
+                            chunk.setBlock(x, y, z, wallBlock);
+                        }
+                    }
                 }
             }
         }

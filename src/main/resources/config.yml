@@ -13,7 +13,7 @@ pools:
   floor_level: 62
   roof_min_height: 6
   roof_max_height: 16
-  doorway_min_height: 2
+  doorway_min_height: 3
   doorway_max_height: 6
   doorway_max_width_half: 3
   walkway_max_width_half: 5
@@ -49,19 +49,21 @@ dark_pools:
   title: "&3The Dark Pools"
   time: 10000
   biome: lush_caves
-  bedrock_level: 60
-  floor_level: 62
-  roof_min_height: 4
-  roof_max_height: 10
+  bedrock_level: 20
+  hallway_min_width_half: 0
+  hallway_max_width_half: 4
+  floor_level: 22
+  roof_min_height: 3
+  roof_max_height: 6
   doorway_min_height: 2
   doorway_max_height: 4
   doorway_max_width_half: 3
-  walkway_max_width_half: 5
-  wall_probability: 0.75
-  window_probability: 0.3
+  walkway_max_width_half: 3
+  wall_probability: 0.8
+  window_probability: 0.1
   island_probability: 0.75
   pool_probability: 0.75
-  double_door_probability: 0.5
+  double_door_probability: 0.1
   food_probability: 0.01
   floor_blocks:
     - blue_concrete
