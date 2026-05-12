@@ -88,6 +88,6 @@ ocean:
   title: "&0The Abyss"
   biome: deep_ocean
   time: 18000
-  sky_height: 32
+  sea_level: 190
   sand_level: 6
   bedrock_level: 1
