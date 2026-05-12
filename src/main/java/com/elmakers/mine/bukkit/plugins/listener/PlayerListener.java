@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 
@@ -42,7 +43,7 @@ public class PlayerListener implements Listener {
         LiminalGenerator generator = plugin.getGeneratorByWorld(world.getName());
         if (generator != null) {
             String nextLevel = generator.getNextLevel();
-            if (nextLevel != null) {
+            if (nextLevel != null && !nextLevel.isEmpty()) {
                 Location entryLocation = plugin.getEntryLocation(nextLevel);
                 event.setTo(entryLocation);
             }
@@ -54,6 +55,15 @@ public class PlayerListener implements Listener {
         Location spawnLocation = plugin.getSpawnLocation("pools");
         if (spawnLocation != null) {
             event.getEntity().setRespawnLocation(spawnLocation, true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
+        Player player = event.getPlayer();
+        LiminalGenerator generator = plugin.getGeneratorByWorld(player.getWorld().getName());
+        if (generator != null) {
+            generator.enter(player);
         }
     }
 }

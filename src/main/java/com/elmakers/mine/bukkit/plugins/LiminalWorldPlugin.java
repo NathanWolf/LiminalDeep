@@ -73,11 +73,11 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
     }
 
     public Location getSpawnLocation(String level) {
-        World poolsWorld = getWorld(level);
-        if (poolsWorld == null) {
+        World world = getWorld(level);
+        if (world == null) {
             return null;
         }
-        return getSpawnLocation(poolsWorld);
+        return getSpawnLocation(world);
     }
 
     public Location getSpawnLocation(World world) {
@@ -89,11 +89,11 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
     }
 
     public Location getEntryLocation(String level) {
-        World poolsWorld = getWorld(level);
-        if (poolsWorld == null) {
+        World world = getWorld(level);
+        if (world == null) {
             return null;
         }
-        return getEntryLocation(poolsWorld);
+        return getEntryLocation(world);
     }
 
     public Location getEntryLocation(World world) {

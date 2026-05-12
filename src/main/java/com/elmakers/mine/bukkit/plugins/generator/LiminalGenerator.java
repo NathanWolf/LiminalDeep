@@ -2,6 +2,7 @@ package com.elmakers.mine.bukkit.plugins.generator;
 
 import java.util.Locale;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
@@ -10,6 +11,7 @@ import org.bukkit.Registry;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
@@ -23,12 +25,18 @@ public abstract class LiminalGenerator extends ChunkGenerator {
     protected final LiminalWorldPlugin plugin;
     protected final int time;
     protected final BiomeProvider biomeProvider;
+    protected final String title;
+    protected final String nextLevel;
+    protected final int titleDelay;
 
     public LiminalGenerator(LiminalWorldPlugin plugin, ConfigurationSection generalConfig, ConfigurationSection config) {
-        this.worldName = config.getString("world");
-        time = config.getInt("time", 0);
         this.plugin = plugin;
-        this.biomeProvider = createDefaultBiomeProvider(config);
+        worldName = config.getString("world");
+        time = config.getInt("time", 0);
+        biomeProvider = createDefaultBiomeProvider(config);
+        title = config.getString("title");
+        titleDelay = config.getInt("title_delay", generalConfig.getInt("title_delay", 0));
+        nextLevel = config.getString("next_level");
     }
 
     protected BiomeProvider createDefaultBiomeProvider(ConfigurationSection config) {
@@ -62,6 +70,19 @@ public abstract class LiminalGenerator extends ChunkGenerator {
 
     public String getNextLevel() {
         return nextLevel;
+    }
+
+    public void enter(Player player) {
+        plugin.getServer().getScheduler().runTaskLater(
+                plugin,
+                () -> player.sendTitle(
+                        ChatColor.translateAlternateColorCodes('&', title),
+                        null,
+                        2 * 20,
+                        4 * 20,
+                        2 * 20
+                ),
+                titleDelay * 20 / 1000);
     }
 
     public void checkNewChunk(Chunk chunk) {
