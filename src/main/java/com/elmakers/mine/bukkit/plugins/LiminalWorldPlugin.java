@@ -1,5 +1,7 @@
 package com.elmakers.mine.bukkit.plugins;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -151,5 +153,13 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
         if (generator != null) {
             generator.checkNewChunk(chunk);
         }
+    }
+
+    public List<LiminalGenerator> getGenerators() {
+        return new ArrayList(generators.values());
+    }
+
+    public List<String> getGeneratorKeys() {
+        return new ArrayList(generators.keySet());
     }
 }

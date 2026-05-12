@@ -66,6 +66,6 @@ public class LiminalCommandExecutor implements TabExecutor {
         if (args.length == 1) {
             return List.of("go");
         }
-        return List.of("pools", "ocean");
+        return plugin.getGeneratorKeys();
     }
 }
