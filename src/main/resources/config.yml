@@ -11,10 +11,10 @@ pools:
   biome: lush_caves
   bedrock_level: 60
   floor_level: 62
-  roof_min_height: 4
-  roof_max_height: 10
+  roof_min_height: 6
+  roof_max_height: 16
   doorway_min_height: 2
-  doorway_max_height: 4
+  doorway_max_height: 6
   doorway_max_width_half: 3
   walkway_max_width_half: 5
   wall_probability: 0.75
@@ -22,7 +22,7 @@ pools:
   island_probability: 0.75
   pool_probability: 0.75
   double_door_probability: 0.5
-  food_probability: 0.01
+  food_probability: 0.02
   floor_blocks:
     - blue_concrete
     - light_blue_concrete

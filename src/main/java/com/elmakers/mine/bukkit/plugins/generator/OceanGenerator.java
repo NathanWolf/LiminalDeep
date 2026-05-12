@@ -27,7 +27,6 @@ public class OceanGenerator extends LiminalGenerator {
     @Override
     public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunk) {
         final int minY = worldInfo.getMinHeight();
-        final int maxY = worldInfo.getMaxHeight();
         final int seaLevel = SEA_LEVEL;
         final int sandLevel = minY + SAND_LEVEL;
         final int bedrockLevel = minY + BEDROCK_LAYER;
