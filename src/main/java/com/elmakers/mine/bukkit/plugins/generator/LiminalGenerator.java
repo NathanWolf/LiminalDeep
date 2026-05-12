@@ -8,8 +8,13 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.generator.WorldInfo;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
 
@@ -17,11 +22,30 @@ public abstract class LiminalGenerator extends ChunkGenerator {
     protected final String worldName;
     protected final LiminalWorldPlugin plugin;
     protected final int time;
+    protected final BiomeProvider biomeProvider;
 
     public LiminalGenerator(LiminalWorldPlugin plugin, ConfigurationSection generalConfig, ConfigurationSection config) {
         this.worldName = config.getString("world");
         time = config.getInt("time", 0);
         this.plugin = plugin;
+        this.biomeProvider = createDefaultBiomeProvider(config);
+    }
+
+    protected BiomeProvider createDefaultBiomeProvider(ConfigurationSection config) {
+        String biomeKey = config.getString("biome");
+        try {
+            if (biomeKey != null) {
+                return new SingleBiomeProvider(Biome.valueOf(biomeKey.toUpperCase(Locale.ROOT)));
+            }
+        } catch (Exception ex) {
+            plugin.getLogger().warning("Invalid biome specified in " + worldName + " config: " + biomeKey);
+        }
+        return null;
+    }
+
+    @Nullable
+    public BiomeProvider getDefaultBiomeProvider(@NotNull WorldInfo worldInfo) {
+        return biomeProvider;
     }
 
     public String getWorldName() {

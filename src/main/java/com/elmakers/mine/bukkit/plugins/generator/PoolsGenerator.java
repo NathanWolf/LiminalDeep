@@ -8,12 +8,9 @@ import org.bukkit.block.EndGateway;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.CaveVines;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
@@ -36,7 +33,6 @@ public class PoolsGenerator extends LiminalGenerator {
     private double POOL_PROBABILITY = 0.75;
     private double DOUBLE_DOOR_PROBABILITY = 0.5;
     private double FOOD_PROBABILITY = 0.01;
-    private final BiomeProvider biomeProvider;
     private final LiminalPopulator exitPopulator;
 
     private Material[] FLOOR_BLOCKS = {
@@ -60,7 +56,6 @@ public class PoolsGenerator extends LiminalGenerator {
 
     public PoolsGenerator(LiminalWorldPlugin plugin, ConfigurationSection generalConfig, ConfigurationSection config) {
         super(plugin, generalConfig, config);
-        biomeProvider = new DesertBiomeProvider();
         exitPopulator = createPopulator(config);
 
         BEDROCK_LEVEL = config.getInt("bedrock_level", BEDROCK_LEVEL);
@@ -91,11 +86,6 @@ public class PoolsGenerator extends LiminalGenerator {
     @Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
         return List.of(exitPopulator);
-    }
-
-    @Nullable
-    public BiomeProvider getDefaultBiomeProvider(@NotNull WorldInfo worldInfo) {
-        return biomeProvider;
     }
 
     private BlockData getWindowBlock() {

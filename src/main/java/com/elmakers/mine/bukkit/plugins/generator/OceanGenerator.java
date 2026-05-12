@@ -6,10 +6,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
 
@@ -17,20 +15,13 @@ public class OceanGenerator extends LiminalGenerator {
     private int SKY_HEIGHT = 32;
     private int SAND_LEVEL = 6;
     private int BEDROCK_LAYER = 1;
-    private final BiomeProvider biomeProvider;
 
     public OceanGenerator(LiminalWorldPlugin plugin, ConfigurationSection generalConfig, ConfigurationSection config) {
         super(plugin, generalConfig, config);
-        biomeProvider = new DesertBiomeProvider();
 
         SKY_HEIGHT = config.getInt("sky_height", SKY_HEIGHT);
         SAND_LEVEL = config.getInt("sand_level", SAND_LEVEL);
         BEDROCK_LAYER = config.getInt("bedrock_level", BEDROCK_LAYER);
-    }
-
-    @Nullable
-    public BiomeProvider getDefaultBiomeProvider(@NotNull WorldInfo worldInfo) {
-        return biomeProvider;
     }
 
     @Override
