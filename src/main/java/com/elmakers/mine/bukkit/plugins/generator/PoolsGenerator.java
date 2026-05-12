@@ -29,6 +29,7 @@ public class PoolsGenerator extends LiminalGenerator {
     private int WALKWAY_MAX_WIDTH_HALF = 5;
     private int HALLWAY_MAX_WIDTH_HALF = 0;
     private int HALLWAY_MIN_WIDTH_HALF = 0;
+    private int FOOD_LOCATION = 1;
     private double WALL_PROBABILITY = 0.75;
     private double WINDOW_PROBABILITY = 0.3;
     private double ISLAND_PROBABILITY = 0.75;
@@ -73,6 +74,7 @@ public class PoolsGenerator extends LiminalGenerator {
         WINDOW_PROBABILITY = config.getDouble("window_probability", WINDOW_PROBABILITY);
         ISLAND_PROBABILITY = config.getDouble("island_probability", ISLAND_PROBABILITY);
         POOL_PROBABILITY = config.getDouble("pool_probability", POOL_PROBABILITY);
+        FOOD_LOCATION = config.getInt("food_location", FOOD_LOCATION);
         DOUBLE_DOOR_PROBABILITY = config.getDouble("double_door_probability", DOUBLE_DOOR_PROBABILITY);
         FOOD_PROBABILITY = config.getDouble("food_probability", FOOD_PROBABILITY);
         LIGHT_PROBABILITY = config.getDouble("light_probability", LIGHT_PROBABILITY);
@@ -220,24 +222,26 @@ public class PoolsGenerator extends LiminalGenerator {
 
                 // Add food
                 if (hasFood) {
+                    int foodLow = FOOD_LOCATION;
+                    int foodHigh = 16 - FOOD_LOCATION;
                     switch (foodCorner) {
                         case 0:
-                            if (x == 1 && z == 1) {
+                            if (x == foodLow && z == foodLow) {
                                 makeFood(x, z, floorLevel + 1, roofLevel - 1, chunk);
                             }
                             break;
                         case 1:
-                            if (x == 15 && z == 1) {
+                            if (x == foodHigh && z == foodLow) {
                                 makeFood(x, z, floorLevel + 1, roofLevel - 1, chunk);
                             }
                             break;
                         case 2:
-                            if (x == 1 && z == 15) {
+                            if (x == foodLow && z == foodHigh) {
                                 makeFood(x, z, floorLevel + 1, roofLevel - 1, chunk);
                             }
                             break;
                         case 3:
-                            if (x == 15 && z == 15) {
+                            if (x == foodHigh && z == foodHigh) {
                                 makeFood(x, z, floorLevel + 1, roofLevel - 1, chunk);
                             }
                             break;
