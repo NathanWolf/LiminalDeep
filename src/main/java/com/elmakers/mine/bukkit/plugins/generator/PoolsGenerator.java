@@ -254,8 +254,9 @@ public class PoolsGenerator extends LiminalGenerator {
                 // Fill in hallways after
                 boolean isCenterWalkway = isWalkway || x == 8 || z == 8;
                 if (!isCenterWalkway && (HALLWAY_MAX_WIDTH_HALF > 0 || HALLWAY_MIN_WIDTH_HALF > 0)) {
-                    int hallwayLeft = 8 - HALLWAY_MAX_WIDTH_HALF;
-                    int hallwayRight = 8 + HALLWAY_MAX_WIDTH_HALF;
+                    int hallwayWidthHalf = random.nextInt(HALLWAY_MAX_WIDTH_HALF - HALLWAY_MIN_WIDTH_HALF) + HALLWAY_MIN_WIDTH_HALF;
+                    int hallwayLeft = 8 - hallwayWidthHalf;
+                    int hallwayRight = 8 + hallwayWidthHalf;
                     if (isStartingChunk) {
                         hallwayLeft = Math.min(hallwayLeft, 6);
                         hallwayRight = Math.max(hallwayRight, 10);
