@@ -85,7 +85,7 @@ dark_pools:
 
 ocean:
   world: world_ocean
-  title: "&0The Abyss"
+  title: "&8The Abyss"
   biome: deep_ocean
   time: 18000
   sea_level: 190
