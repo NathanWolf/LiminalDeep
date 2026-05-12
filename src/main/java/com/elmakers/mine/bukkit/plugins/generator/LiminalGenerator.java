@@ -61,7 +61,7 @@ public abstract class LiminalGenerator extends ChunkGenerator {
     }
 
     public String getNextLevel() {
-        return null;
+        return nextLevel;
     }
 
     public void checkNewChunk(Chunk chunk) {

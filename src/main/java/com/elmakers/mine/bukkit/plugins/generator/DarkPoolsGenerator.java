@@ -13,9 +13,4 @@ public class DarkPoolsGenerator extends PoolsGenerator {
     protected LiminalPopulator createPopulator(ConfigurationSection config) {
         return new DarkPoolsExitPopulator(plugin, config);
     }
-
-    @Override
-    public String getNextLevel() {
-        return "ocean";
-    }
 }

@@ -251,11 +251,6 @@ public class PoolsGenerator extends LiminalGenerator {
     }
 
     @Override
-    public String getNextLevel() {
-        return "dark_pools";
-    }
-
-    @Override
     public void checkNewChunk(Chunk chunk) {
         exitPopulator.checkNewChunk(chunk);
     }
