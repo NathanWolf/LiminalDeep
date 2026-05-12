@@ -35,6 +35,7 @@ public class PoolsGenerator extends LiminalGenerator {
     private double POOL_PROBABILITY = 0.75;
     private double DOUBLE_DOOR_PROBABILITY = 0.5;
     private double FOOD_PROBABILITY = 0.01;
+    private double LIGHT_PROBABILITY = 1;
     private final LiminalPopulator exitPopulator;
 
     private Material[] FLOOR_BLOCKS = {
@@ -74,6 +75,7 @@ public class PoolsGenerator extends LiminalGenerator {
         POOL_PROBABILITY = config.getDouble("pool_probability", POOL_PROBABILITY);
         DOUBLE_DOOR_PROBABILITY = config.getDouble("double_door_probability", DOUBLE_DOOR_PROBABILITY);
         FOOD_PROBABILITY = config.getDouble("food_probability", FOOD_PROBABILITY);
+        LIGHT_PROBABILITY = config.getDouble("light_probability", LIGHT_PROBABILITY);
         HALLWAY_MAX_WIDTH_HALF = config.getInt("hallway_max_width_half", HALLWAY_MAX_WIDTH_HALF);
         HALLWAY_MIN_WIDTH_HALF = config.getInt("hallway_min_width_half", HALLWAY_MIN_WIDTH_HALF);
 
@@ -148,6 +150,9 @@ public class PoolsGenerator extends LiminalGenerator {
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
+                final boolean hasLight = random.nextDouble() < LIGHT_PROBABILITY;
+                final Material lightMaterial = hasLight ? lightBlock : floorBlock;
+
                 // Fill in the sub-floor first
                 chunk.setBlock(x, BEDROCK_LEVEL, z, Material.BEDROCK);
                 for (int y = BEDROCK_LEVEL + 1; y < FLOOR_LEVEL; y++) {
@@ -187,7 +192,7 @@ public class PoolsGenerator extends LiminalGenerator {
                     if (!hasIsland) {
                         chunk.setBlock(x, floorLevel, z, Material.WATER);
                         if (x == 8 && z == 8) {
-                            chunk.setBlock(x, floorLevel - 1, z, lightBlock);
+                            chunk.setBlock(x, floorLevel - 1, z, lightMaterial);
                         }
                     } else {
                         chunk.setBlock(x, floorLevel, z, floorBlock);
@@ -198,7 +203,7 @@ public class PoolsGenerator extends LiminalGenerator {
                     if (hasPools) {
                         chunk.setBlock(x, floorLevel, z, Material.WATER);
                         if ((x == lightsFirst || x == lightsSecond) && (z == lightsFirst || z == lightsSecond)) {
-                            chunk.setBlock(x, floorLevel - 1, z, lightBlock);
+                            chunk.setBlock(x, floorLevel - 1, z, lightMaterial);
                         }
                     } else {
                         chunk.setBlock(x, floorLevel, z, floorBlock);
