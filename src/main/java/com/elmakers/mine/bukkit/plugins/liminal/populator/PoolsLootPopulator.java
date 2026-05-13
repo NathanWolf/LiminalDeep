@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins.liminal.generator;
+package com.elmakers.mine.bukkit.plugins.liminal.populator;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorldPlugin;
 import com.elmakers.mine.bukkit.plugins.liminal.data.LootTable;
+import com.elmakers.mine.bukkit.plugins.liminal.generator.LiminalGenerator;
 
 public class PoolsLootPopulator extends LiminalPopulator {
     private Map<String, LootTable> lootTables = new HashMap<>();

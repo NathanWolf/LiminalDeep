@@ -1,10 +1,11 @@
-package com.elmakers.mine.bukkit.plugins.liminal.generator;
+package com.elmakers.mine.bukkit.plugins.liminal.populator;
 
 import org.bukkit.Chunk;
 import org.bukkit.generator.BlockPopulator;
 
 import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorld;
 import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorldPlugin;
+import com.elmakers.mine.bukkit.plugins.liminal.generator.LiminalGenerator;
 
 public class LiminalPopulator extends BlockPopulator {
     protected final LiminalGenerator generator;

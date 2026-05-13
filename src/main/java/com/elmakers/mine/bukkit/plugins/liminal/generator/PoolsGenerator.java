@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Container;
 import org.bukkit.block.EndGateway;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Levelled;
@@ -14,7 +13,6 @@ import org.bukkit.block.data.type.GlowLichen;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.WorldInfo;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
@@ -25,7 +23,9 @@ import java.util.Random;
 import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorld;
 import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorldPlugin;
 import com.elmakers.mine.bukkit.plugins.liminal.data.FoodType;
-import com.elmakers.mine.bukkit.plugins.liminal.data.LootTable;
+import com.elmakers.mine.bukkit.plugins.liminal.populator.LiminalPopulator;
+import com.elmakers.mine.bukkit.plugins.liminal.populator.PoolsExitPopulator;
+import com.elmakers.mine.bukkit.plugins.liminal.populator.PoolsLootPopulator;
 
 public class PoolsGenerator extends LiminalGenerator {
     private int BEDROCK_LEVEL = 60;
