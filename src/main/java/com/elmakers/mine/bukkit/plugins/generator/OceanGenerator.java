@@ -9,15 +9,15 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
 
-import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
+import com.elmakers.mine.bukkit.plugins.LiminalWorld;
 
 public class OceanGenerator extends LiminalGenerator {
     private int SEA_LEVEL = 190;
     private int SAND_LEVEL = 6;
     private int BEDROCK_LAYER = 1;
 
-    public OceanGenerator(LiminalWorldPlugin plugin, ConfigurationSection generalConfig, ConfigurationSection config) {
-        super(plugin, generalConfig, config);
+    public OceanGenerator(LiminalWorld world, ConfigurationSection generalConfig, ConfigurationSection config) {
+        super(world, generalConfig, config);
 
         SEA_LEVEL = config.getInt("sea_level", SEA_LEVEL);
         SAND_LEVEL = config.getInt("sand_level", SAND_LEVEL);

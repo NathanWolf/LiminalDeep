@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 
-import com.elmakers.mine.bukkit.plugins.generator.LiminalGenerator;
+import com.elmakers.mine.bukkit.plugins.LiminalWorld;
 import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
 
 public class PlayerListener implements Listener {
@@ -26,8 +26,9 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         World world = player.getWorld();
         World startingWorld = plugin.getServer().getWorlds().get(0);
-        if (world.equals(startingWorld)) {
-            if (!plugin.sendToLevel(player, "pools")) {
+        LiminalWorld defaultWorld = plugin.getDefaultWorld();
+        if (defaultWorld != null && world.equals(startingWorld)) {
+            if (!plugin.sendToLevel(player, defaultWorld.getName())) {
                 plugin.getLogger().warning("Unable to send " + player.getName() + " to starting world");
             } else {
                 plugin.getLogger().info("Player " + player.getName() + " sent to starting world");
@@ -40,9 +41,9 @@ public class PlayerListener implements Listener {
     public void onPlayerPortal(PlayerPortalEvent event) {
         Player player = event.getPlayer();
         World world = player.getWorld();
-        LiminalGenerator generator = plugin.getGeneratorByWorld(world.getName());
-        if (generator != null) {
-            String nextLevel = generator.getNextLevel();
+        LiminalWorld liminalWorld = plugin.getWorld(world.getName());
+        if (liminalWorld != null) {
+            String nextLevel = liminalWorld.getNextLevel();
             if (nextLevel != null && !nextLevel.isEmpty()) {
                 Location entryLocation = plugin.getEntryLocation(nextLevel);
                 event.setTo(entryLocation);
@@ -52,18 +53,18 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Location spawnLocation = plugin.getSpawnLocation("pools");
-        if (spawnLocation != null) {
-            event.getEntity().setRespawnLocation(spawnLocation, true);
+        LiminalWorld defaultWorld = plugin.getDefaultWorld();
+        if (defaultWorld != null) {
+            event.getEntity().setRespawnLocation(defaultWorld.getSpawnLocation(), true);
         }
     }
 
     @EventHandler
     public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
-        LiminalGenerator generator = plugin.getGeneratorByWorld(player.getWorld().getName());
-        if (generator != null) {
-            generator.enter(player);
+        LiminalWorld liminalWorld = plugin.getWorld(player.getWorld().getName());
+        if (liminalWorld != null) {
+            liminalWorld.enter(player);
         }
     }
 }

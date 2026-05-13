@@ -27,8 +27,8 @@ public class PoolsExitPopulator extends LiminalPopulator {
     private int EXIT_LEVEL = -32;
     private boolean COMMAND_BLOCKS_ENABLED = true;
 
-    public PoolsExitPopulator(LiminalWorldPlugin plugin, ConfigurationSection config) {
-        super(plugin);
+    public PoolsExitPopulator(LiminalGenerator generator, ConfigurationSection config) {
+        super(generator);
 
         BEDROCK_LEVEL = config.getInt("bedrock_level", BEDROCK_LEVEL);
         FLOOR_LEVEL = config.getInt("floor_level", FLOOR_LEVEL);
@@ -48,6 +48,7 @@ public class PoolsExitPopulator extends LiminalPopulator {
 
     @Override
     public void populate(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, LimitedRegion region) {
+        final LiminalWorldPlugin plugin = getPlugin();
         final long distanceSquared = (long)(chunkX * 16) * (chunkX * 16) + (chunkZ * 16) * (chunkZ * 16);
         final double exitProbability = distanceSquared < EXIT_MIN_DISTANCE_SQUARED ? 0 :
                 EXIT_MAX_PROBABILITY * Math.min(1.0, (distanceSquared - EXIT_MIN_DISTANCE_SQUARED) / (EXIT_MAX_DISTANCE_SQUARED - EXIT_MIN_DISTANCE_SQUARED));

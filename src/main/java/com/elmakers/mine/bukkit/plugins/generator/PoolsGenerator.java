@@ -7,7 +7,6 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.EndGateway;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.CaveVines;
 import org.bukkit.block.data.type.GlowLichen;
 import org.bukkit.configuration.ConfigurationSection;
@@ -19,6 +18,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.List;
 import java.util.Random;
 
+import com.elmakers.mine.bukkit.plugins.LiminalWorld;
 import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
 
 public class PoolsGenerator extends LiminalGenerator {
@@ -62,8 +62,8 @@ public class PoolsGenerator extends LiminalGenerator {
             Material.SEA_LANTERN
     };
 
-    public PoolsGenerator(LiminalWorldPlugin plugin, ConfigurationSection generalConfig, ConfigurationSection config) {
-        super(plugin, generalConfig, config);
+    public PoolsGenerator(LiminalWorld world, ConfigurationSection generalConfig, ConfigurationSection config) {
+        super(world, generalConfig, config);
         exitPopulator = createPopulator(config);
 
         BEDROCK_LEVEL = config.getInt("bedrock_level", BEDROCK_LEVEL);
@@ -86,6 +86,7 @@ public class PoolsGenerator extends LiminalGenerator {
         HALLWAY_MIN_WIDTH_HALF = config.getInt("hallway_min_width_half", HALLWAY_MIN_WIDTH_HALF);
         SUNROOF_PROBABILITY = config.getDouble("sunroof_probability", SUNROOF_PROBABILITY);
 
+        final LiminalWorldPlugin plugin = world.getPlugin();
         FLOOR_BLOCKS = plugin.getMaterials(config, "floor_blocks", FLOOR_BLOCKS);
         WALL_BLOCKS = plugin.getMaterials(config, "wall_blocks", WALL_BLOCKS);
         CEILING_BLOCKS = plugin.getMaterials(config, "ceiling_blocks", CEILING_BLOCKS);
@@ -93,7 +94,7 @@ public class PoolsGenerator extends LiminalGenerator {
     }
 
     protected LiminalPopulator createPopulator(ConfigurationSection config) {
-        return new PoolsExitPopulator(plugin, config);
+        return new PoolsExitPopulator(this, config);
     }
 
     @Override
@@ -102,7 +103,7 @@ public class PoolsGenerator extends LiminalGenerator {
     }
 
     private BlockData getWindowBlock() {
-        BlockData gatewayData = plugin.getServer().createBlockData(Material.END_GATEWAY);
+        BlockData gatewayData = world.getPlugin().getServer().createBlockData(Material.END_GATEWAY);
         if (gatewayData instanceof EndGateway) {
             EndGateway gateway = (EndGateway)gatewayData;
             gateway.setAge(-Integer.MAX_VALUE);
@@ -111,7 +112,7 @@ public class PoolsGenerator extends LiminalGenerator {
     }
 
     private void makeFood(int x, int z, int minY, int maxY, @NonNull ChunkData chunk) {
-        BlockData foodData = plugin.getServer().createBlockData(Material.CAVE_VINES);
+        BlockData foodData = world.getPlugin().getServer().createBlockData(Material.CAVE_VINES);
         CaveVines vines = (CaveVines)foodData;
         vines.setBerries(true);
         for (int y = minY; y <= maxY; y++) {
@@ -121,6 +122,7 @@ public class PoolsGenerator extends LiminalGenerator {
 
     @Override
     public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunk) {
+        final LiminalWorldPlugin plugin = world.getPlugin();
         final boolean isStartingChunk = chunkX == 0 && chunkZ == 0;
         final int floorLevel = FLOOR_LEVEL;
         final int roofLevel = floorLevel + random.nextInt(ROOF_MAX_HEIGHT - ROOF_MIN_HEIGHT) + ROOF_MIN_HEIGHT;
