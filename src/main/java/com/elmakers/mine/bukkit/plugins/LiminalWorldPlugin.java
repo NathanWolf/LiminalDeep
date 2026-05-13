@@ -45,10 +45,9 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
         }
         defaultWorld = generalConfig.getString("default_world");
 
-        for (String key : configuration.getKeys(false)) {
-            if (key.equals("general")) continue;
-
-            LiminalWorld world = new LiminalWorld(this, key, generalConfig, configuration.getConfigurationSection(key));
+        ConfigurationSection worldConfigs = configuration.getConfigurationSection("worlds");
+        for (String key : worldConfigs.getKeys(false)) {
+            LiminalWorld world = new LiminalWorld(this, key, generalConfig, worldConfigs.getConfigurationSection(key));
             worlds.put(key, world);
         }
 

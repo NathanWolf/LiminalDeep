@@ -3,103 +3,104 @@ general:
   title_delay: 8000
   default_world: pools
 
-pools:
-  generator: pools
-  next_level: dark_pools
-  title_delay: 2000
-  title: "&bThe Shallow Pools"
-  time: 6000
-  biome: lush_caves
-  bedrock_level: 60
-  floor_level: 62
-  roof_min_height: 6
-  roof_max_height: 16
-  doorway_min_height: 3
-  doorway_max_height: 6
-  doorway_max_width_half: 3
-  walkway_max_width_half: 5
-  wall_probability: 0.75
-  window_probability: 0.3
-  island_probability: 0.75
-  pool_probability: 0.75
-  double_door_probability: 0.5
-  food_probability: 0.02
-  food_block: minecraft:cave_vines[age=0,berries=true]
-  floor_blocks:
-    - blue_concrete
-    - light_blue_concrete
-  wall_blacks:
-    - polished_diorite
-    - diorite
-    - quartz_block
-  ceiling_blacks:
-    - polished_diorite
-    - diorite
-    - quartz_block
-  light_blocks:
-    - sea_lantern
-  exit:
-    min_distance: 640
-    max_distance: 3200
-    max_probability: 0.1
-    command_blocks: true
-    exit_level: -32
+worlds:
+  pools:
+    generator: pools
+    next_level: dark_pools
+    title_delay: 2000
+    title: "&bThe Shallow Pools"
+    time: 6000
+    biome: lush_caves
+    bedrock_level: 60
+    floor_level: 62
+    roof_min_height: 6
+    roof_max_height: 16
+    doorway_min_height: 3
+    doorway_max_height: 6
+    doorway_max_width_half: 3
+    walkway_max_width_half: 5
+    wall_probability: 0.75
+    window_probability: 0.3
+    island_probability: 0.75
+    pool_probability: 0.75
+    double_door_probability: 0.5
+    food_probability: 0.02
+    food_block: minecraft:cave_vines[age=0,berries=true]
+    floor_blocks:
+      - blue_concrete
+      - light_blue_concrete
+    wall_blacks:
+      - polished_diorite
+      - diorite
+      - quartz_block
+    ceiling_blacks:
+      - polished_diorite
+      - diorite
+      - quartz_block
+    light_blocks:
+      - sea_lantern
+    exit:
+      min_distance: 640
+      max_distance: 3200
+      max_probability: 0.1
+      command_blocks: true
+      exit_level: -32
 
-dark_pools:
-  generator: pools
-  next_level: ocean
-  title: "&3The Dark Pools"
-  time: 14000
-  rain: true
-  biome: lush_caves
-  food_location: 7
-  bedrock_level: 20
-  sunroof_probability: 0.25
-  hallway_min_width_half: 0
-  hallway_max_width_half: 3
-  floor_level: 22
-  roof_min_height: 3
-  roof_max_height: 6
-  doorway_min_height: 2
-  doorway_max_height: 4
-  doorway_max_width_half: 3
-  walkway_max_width_half: 3
-  light_probability: 0.1
-  wall_probability: 0.8
-  window_probability: 0.1
-  island_probability: 0.75
-  pool_probability: 0.75
-  double_door_probability: 0.1
-  food_probability: 0.01
-  flooding_probability: 0.2
-  flooding_min_level: 1
-  flooding_max_level: 4
-  food_block: minecraft:kelp
-  floor_blocks:
-    - blue_concrete
-    - light_blue_concrete
-  wall_blacks:
-    - polished_diorite
-    - diorite
-    - quartz_block
-  ceiling_blacks:
-    - polished_diorite
-    - diorite
-    - quartz_block
-  light_blocks:
-    - sea_lantern
-  exit:
-    min_distance: 640
-    max_distance: 3200
-    max_probability: 0.1
-    command_blocks: true
-    exit_level: -32
+  dark_pools:
+    generator: pools
+    next_level: ocean
+    title: "&3The Dark Pools"
+    time: 14000
+    rain: true
+    biome: lush_caves
+    food_location: 7
+    bedrock_level: 20
+    sunroof_probability: 0.25
+    hallway_min_width_half: 0
+    hallway_max_width_half: 3
+    floor_level: 22
+    roof_min_height: 3
+    roof_max_height: 6
+    doorway_min_height: 2
+    doorway_max_height: 4
+    doorway_max_width_half: 3
+    walkway_max_width_half: 3
+    light_probability: 0.1
+    wall_probability: 0.8
+    window_probability: 0.1
+    island_probability: 0.75
+    pool_probability: 0.75
+    double_door_probability: 0.1
+    food_probability: 0.01
+    flooding_probability: 0.2
+    flooding_min_level: 1
+    flooding_max_level: 4
+    food_block: minecraft:kelp
+    floor_blocks:
+      - blue_concrete
+      - light_blue_concrete
+    wall_blacks:
+      - polished_diorite
+      - diorite
+      - quartz_block
+    ceiling_blacks:
+      - polished_diorite
+      - diorite
+      - quartz_block
+    light_blocks:
+      - sea_lantern
+    exit:
+      min_distance: 640
+      max_distance: 3200
+      max_probability: 0.1
+      command_blocks: true
+      exit_level: -32
 
-ocean:
-  generator: ocean
-  title: "&8The Abyss"
-  biome: deep_ocean
-  time: 18000
-  sea_level: 190
-  sand_level: 6
-  bedrock_level: 1
+  ocean:
+    generator: ocean
+    title: "&8The Abyss"
+    biome: deep_ocean
+    time: 18000
+    sea_level: 190
+    sand_level: 6
+    bedrock_level: 1
