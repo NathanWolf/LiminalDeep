@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.EndGateway;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Levelled;
 import org.bukkit.block.data.type.CaveVines;
 import org.bukkit.block.data.type.GlowLichen;
 import org.bukkit.configuration.ConfigurationSection;
@@ -41,6 +42,9 @@ public class PoolsGenerator extends LiminalGenerator {
     private double FOOD_PROBABILITY = 0.01;
     private double LIGHT_PROBABILITY = 1;
     private double SUNROOF_PROBABILITY = 1;
+    private double FLOODING_PROBABILITY = 0;
+    private double FLOODING_MIN_LEVEL = 1;
+    private double FLOODING_MAX_LEVEL = 6;
     private final LiminalPopulator exitPopulator;
 
     private Material[] FLOOR_BLOCKS = {
@@ -85,6 +89,9 @@ public class PoolsGenerator extends LiminalGenerator {
         HALLWAY_MAX_WIDTH_HALF = config.getInt("hallway_max_width_half", HALLWAY_MAX_WIDTH_HALF);
         HALLWAY_MIN_WIDTH_HALF = config.getInt("hallway_min_width_half", HALLWAY_MIN_WIDTH_HALF);
         SUNROOF_PROBABILITY = config.getDouble("sunroof_probability", SUNROOF_PROBABILITY);
+        FLOODING_PROBABILITY = config.getDouble("flooding_probability", FLOODING_PROBABILITY);
+        FLOODING_MIN_LEVEL = config.getDouble("flooding_min_level", FLOODING_MIN_LEVEL);
+        FLOODING_MAX_LEVEL = config.getDouble("flooding_mx_level", FLOODING_MAX_LEVEL);
 
         final LiminalWorldPlugin plugin = world.getPlugin();
         FLOOR_BLOCKS = plugin.getMaterials(config, "floor_blocks", FLOOR_BLOCKS);
@@ -157,6 +164,13 @@ public class PoolsGenerator extends LiminalGenerator {
         final Material lightBlock = LIGHT_BLOCKS[random.nextInt(LIGHT_BLOCKS.length)];
         final int lightsFirst = walkwayLeft / 2 + 1;
         final int lightsSecond = 16 - lightsFirst;
+        final boolean isFlooded = random.nextDouble() < FLOODING_PROBABILITY;
+        Levelled floodWater = null;
+        if (isFlooded) {
+            int floodLevel = random.nextInt((int)(FLOODING_MAX_LEVEL - FLOODING_MIN_LEVEL)) + (int)FLOODING_MIN_LEVEL;
+            floodWater = (Levelled)plugin.getServer().createBlockData(Material.WATER);
+            floodWater.setLevel(floodLevel);
+        }
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
@@ -197,6 +211,9 @@ public class PoolsGenerator extends LiminalGenerator {
                         chunk.setBlock(x, roofLevel, z, ceilingBlock);
                     }
                     chunk.setBlock(x, floorLevel, z, floorBlock);
+                    if (floodWater != null) {
+                        chunk.setBlock(x, floorLevel + 1, z, floodWater);
+                    }
                 } else if (isSunRoof) {
                     // Island
                     if (!hasIsland) {
