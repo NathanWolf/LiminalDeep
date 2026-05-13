@@ -34,7 +34,11 @@ public class LiminalCommandExecutor implements TabExecutor {
                 processGoCommand(sender, args[1]);
                 break;
             case "give":
-                processGiveCommand(sender, args[1]);
+                if (args.length < 3) {
+                    showUsage(sender);
+                    return true;
+                }
+                processGiveCommand(sender, args[1], args[2]);
                 break;
             default:
                 showUsage(sender);
@@ -52,11 +56,12 @@ public class LiminalCommandExecutor implements TabExecutor {
         }
     }
 
-    private void processGiveCommand(CommandSender sender, String itemId) {
-        if (!checkPlayer(sender)) {
+    private void processGiveCommand(CommandSender sender, String playerName, String itemId) {
+        Player player = plugin.getServer().getPlayer(playerName);
+        if (player == null) {
+            sender.sendMessage(ChatColor.RED + "Player not found: " + playerName);
             return;
         }
-        Player player = (Player)sender;
         ItemStack item = plugin.createItem(itemId);
         if (item == null) {
             sender.sendMessage(ChatColor.RED + "Invalid item: " + itemId);
@@ -75,7 +80,7 @@ public class LiminalCommandExecutor implements TabExecutor {
     }
 
     private void showUsage(CommandSender sender) {
-        sender.sendMessage(ChatColor.RED + "Usage: /liminal go <pools|ocean>");
+        sender.sendMessage(ChatColor.RED + "Usage: /liminal [go|give] ...");
     }
 
     @Override
@@ -87,6 +92,12 @@ public class LiminalCommandExecutor implements TabExecutor {
             switch (args[0]) {
                 case "go":
                     return plugin.getWorldKeys();
+                case "give":
+                    return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+            }
+        }
+        if (args.length == 3) {
+            switch (args[0]) {
                 case "give":
                     return plugin.getItemKeys();
             }
