@@ -91,6 +91,11 @@ worlds:
       - quartz_block
     light_blocks:
       - sea_lantern
+    loot_barrels:
+      shears:
+        probability: 0.05
+        items:
+          - kelp_shears
     exit:
       min_distance: 640
       max_distance: 3200

@@ -16,12 +16,16 @@ import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 
 import com.elmakers.mine.bukkit.plugins.LiminalWorld;
 import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
+import com.elmakers.mine.bukkit.plugins.data.FoodType;
+import com.elmakers.mine.bukkit.plugins.data.LootTable;
 
 public class PoolsGenerator extends LiminalGenerator {
     private int BEDROCK_LEVEL = 60;
@@ -50,6 +54,7 @@ public class PoolsGenerator extends LiminalGenerator {
     private FoodType foodType = FoodType.VINES;
     private final LiminalPopulator exitPopulator;
     private final BlockData foodBlock;
+    private Map<String, LootTable> loot = new HashMap<>();
 
     private Material[] FLOOR_BLOCKS = {
         Material.BLUE_CONCRETE,
@@ -105,6 +110,11 @@ public class PoolsGenerator extends LiminalGenerator {
             foodType = FoodType.valueOf(foodTypeString.toUpperCase(Locale.ROOT));
         } catch (Exception ex) {
             getPlugin().getLogger().warning("Invalid food type: " + foodTypeString);
+        }
+
+        ConfigurationSection lootConfig = config.getConfigurationSection("loot");
+        for (String key : lootConfig.getKeys(false)) {
+            loot.put(key, new LootTable(lootConfig.getConfigurationSection(key)));
         }
 
         final LiminalWorldPlugin plugin = world.getPlugin();

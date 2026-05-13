@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins.generator;
+package com.elmakers.mine.bukkit.plugins.data;
 
 public enum FoodType {
     VINES,
