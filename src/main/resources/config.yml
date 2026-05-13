@@ -24,6 +24,7 @@ pools:
   pool_probability: 0.75
   double_door_probability: 0.5
   food_probability: 0.02
+  food_block: minecraft:cave_vines[age=0,berries=true]
   floor_blocks:
     - blue_concrete
     - light_blue_concrete
@@ -73,6 +74,7 @@ dark_pools:
   flooding_probability: 0.2
   flooding_min_level: 1
   flooding_max_level: 4
+  food_block: minecraft:kelp
   floor_blocks:
     - blue_concrete
     - light_blue_concrete

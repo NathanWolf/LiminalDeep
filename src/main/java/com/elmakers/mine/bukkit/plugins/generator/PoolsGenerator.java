@@ -46,6 +46,7 @@ public class PoolsGenerator extends LiminalGenerator {
     private double FLOODING_MIN_LEVEL = 1;
     private double FLOODING_MAX_LEVEL = 6;
     private final LiminalPopulator exitPopulator;
+    private final BlockData foodBlock;
 
     private Material[] FLOOR_BLOCKS = {
         Material.BLUE_CONCRETE,
@@ -92,6 +93,8 @@ public class PoolsGenerator extends LiminalGenerator {
         FLOODING_PROBABILITY = config.getDouble("flooding_probability", FLOODING_PROBABILITY);
         FLOODING_MIN_LEVEL = config.getDouble("flooding_min_level", FLOODING_MIN_LEVEL);
         FLOODING_MAX_LEVEL = config.getDouble("flooding_mx_level", FLOODING_MAX_LEVEL);
+        String foodBlockData = config.getString("food_block", "");
+        foodBlock = foodBlockData.isEmpty() ? null : world.getPlugin().getServer().createBlockData(foodBlockData);
 
         final LiminalWorldPlugin plugin = world.getPlugin();
         FLOOR_BLOCKS = plugin.getMaterials(config, "floor_blocks", FLOOR_BLOCKS);
@@ -119,11 +122,9 @@ public class PoolsGenerator extends LiminalGenerator {
     }
 
     private void makeFood(int x, int z, int minY, int maxY, @NonNull ChunkData chunk) {
-        BlockData foodData = world.getPlugin().getServer().createBlockData(Material.CAVE_VINES);
-        CaveVines vines = (CaveVines)foodData;
-        vines.setBerries(true);
+        if (foodBlock == null) return;
         for (int y = minY; y <= maxY; y++) {
-            chunk.setBlock(x, y, z, foodData);
+            chunk.setBlock(x, y, z, foodBlock);
         }
     }
 
