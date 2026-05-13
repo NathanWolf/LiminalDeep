@@ -8,7 +8,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.EndGateway;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Levelled;
-import org.bukkit.block.data.type.CaveVines;
 import org.bukkit.block.data.type.GlowLichen;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.BlockPopulator;
@@ -165,7 +164,7 @@ public class PoolsGenerator extends LiminalGenerator {
         final Material lightBlock = LIGHT_BLOCKS[random.nextInt(LIGHT_BLOCKS.length)];
         final int lightsFirst = walkwayLeft / 2 + 1;
         final int lightsSecond = 16 - lightsFirst;
-        final boolean isFlooded = random.nextDouble() < FLOODING_PROBABILITY;
+        final boolean isFlooded = hasSunRoof && random.nextDouble() < FLOODING_PROBABILITY;
         Levelled floodWater = null;
         if (isFlooded) {
             int floodLevel = random.nextInt((int)(FLOODING_MAX_LEVEL - FLOODING_MIN_LEVEL)) + (int)FLOODING_MIN_LEVEL;
