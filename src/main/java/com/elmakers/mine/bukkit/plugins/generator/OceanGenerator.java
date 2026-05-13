@@ -10,6 +10,7 @@ import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
 
 import com.elmakers.mine.bukkit.plugins.LiminalWorld;
+import com.elmakers.mine.bukkit.plugins.tasks.StalkerTask;
 
 public class OceanGenerator extends LiminalGenerator {
     private int SEA_LEVEL = 190;
@@ -22,6 +23,13 @@ public class OceanGenerator extends LiminalGenerator {
         SEA_LEVEL = config.getInt("sea_level", SEA_LEVEL);
         SAND_LEVEL = config.getInt("sand_level", SAND_LEVEL);
         BEDROCK_LAYER = config.getInt("bedrock_level", BEDROCK_LAYER);
+
+        getPlugin().getServer().getScheduler().runTaskTimer(
+            getPlugin(),
+            new StalkerTask(world),
+            0L,
+            10L
+        );
     }
 
     @Override
