@@ -52,6 +52,7 @@ dark_pools:
   biome: lush_caves
   food_location: 7
   bedrock_level: 20
+  sunroof_probability: 0.25
   hallway_min_width_half: 0
   hallway_max_width_half: 3
   floor_level: 22

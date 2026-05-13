@@ -4,9 +4,12 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.EndGateway;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.CaveVines;
+import org.bukkit.block.data.type.GlowLichen;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.WorldInfo;
@@ -37,6 +40,7 @@ public class PoolsGenerator extends LiminalGenerator {
     private double DOUBLE_DOOR_PROBABILITY = 0.5;
     private double FOOD_PROBABILITY = 0.01;
     private double LIGHT_PROBABILITY = 1;
+    private double SUNROOF_PROBABILITY = 1;
     private final LiminalPopulator exitPopulator;
 
     private Material[] FLOOR_BLOCKS = {
@@ -80,6 +84,7 @@ public class PoolsGenerator extends LiminalGenerator {
         LIGHT_PROBABILITY = config.getDouble("light_probability", LIGHT_PROBABILITY);
         HALLWAY_MAX_WIDTH_HALF = config.getInt("hallway_max_width_half", HALLWAY_MAX_WIDTH_HALF);
         HALLWAY_MIN_WIDTH_HALF = config.getInt("hallway_min_width_half", HALLWAY_MIN_WIDTH_HALF);
+        SUNROOF_PROBABILITY = config.getDouble("sunroof_probability", SUNROOF_PROBABILITY);
 
         FLOOR_BLOCKS = plugin.getMaterials(config, "floor_blocks", FLOOR_BLOCKS);
         WALL_BLOCKS = plugin.getMaterials(config, "wall_blocks", WALL_BLOCKS);
@@ -133,6 +138,7 @@ public class PoolsGenerator extends LiminalGenerator {
         final boolean hasZWindow = random.nextDouble() < WINDOW_PROBABILITY;
         final boolean hasIsland = !isStartingChunk && random.nextDouble() < ISLAND_PROBABILITY;
         final boolean hasPools = random.nextDouble() < POOL_PROBABILITY;
+        final boolean hasSunRoof = isStartingChunk || random.nextDouble() < SUNROOF_PROBABILITY;
         int xWindowLocation = random.nextInt(4 - doorwayWidthHalf) + 1;
         if (random.nextDouble() > 0.5) xWindowLocation = 15 - xWindowLocation;
         int zWindowLocation = random.nextInt(4 - doorwayWidthHalf) + 1;
@@ -161,7 +167,7 @@ public class PoolsGenerator extends LiminalGenerator {
                     chunk.setBlock(x, y, z, floorBlock);
                 }
 
-                final boolean isSunRoof = x >= 7 && z >= 7 && x <= 9 && z <= 9;
+                final boolean isSunRoof = hasSunRoof && x >= 7 && z >= 7 && x <= 9 && z <= 9;
                 final boolean isWalkway = (x > walkwayLeft && x < walkWayRight) || (z > walkwayLeft && z < walkWayRight);
                 if (x == 0 || z == 0) {
                     chunk.setBlock(x, floorLevel, z, floorBlock);
@@ -220,6 +226,17 @@ public class PoolsGenerator extends LiminalGenerator {
                     }
                 }
 
+                // Add a dim light if no sunroof so it's not 100% dark
+                if (!hasSunRoof && x == 8 && z == 8) {
+                    GlowLichen dimLight = (GlowLichen)plugin.getServer().createBlockData(Material.GLOW_LICHEN);
+                    dimLight.setFace(BlockFace.DOWN, true);
+                    if (chunk.getBlockData(x, floorLevel, z).getMaterial() == Material.WATER) {
+                        dimLight.setWaterlogged(true);
+                        chunk.setBlock(x, floorLevel, z, dimLight);
+                    } else {
+                        chunk.setBlock(x, floorLevel + 1, z, dimLight);
+                    }
+                }
                 // Add food
                 if (hasFood) {
                     int foodLow = FOOD_LOCATION;
