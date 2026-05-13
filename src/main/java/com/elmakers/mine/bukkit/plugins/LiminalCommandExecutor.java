@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -32,6 +33,9 @@ public class LiminalCommandExecutor implements TabExecutor {
             case "go":
                 processGoCommand(sender, args[1]);
                 break;
+            case "give":
+                processGiveCommand(sender, args[1]);
+                break;
             default:
                 showUsage(sender);
         }
@@ -46,6 +50,19 @@ public class LiminalCommandExecutor implements TabExecutor {
         if (!plugin.sendToLevel(player, level)) {
             sender.sendMessage(ChatColor.RED + "Unable to load world " + level);
         }
+    }
+
+    private void processGiveCommand(CommandSender sender, String itemId) {
+        if (!checkPlayer(sender)) {
+            return;
+        }
+        Player player = (Player)sender;
+        ItemStack item = plugin.createItem(itemId);
+        if (item == null) {
+            sender.sendMessage(ChatColor.RED + "Invalid item: " + itemId);
+            return;
+        }
+        player.getInventory().addItem(item);
     }
 
     private boolean checkPlayer(CommandSender sender) {
@@ -64,8 +81,16 @@ public class LiminalCommandExecutor implements TabExecutor {
     @Override
     public @Nullable List<String> onTabComplete(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, @NonNull String[] args) {
         if (args.length == 1) {
-            return List.of("go");
+            return List.of("go", "give");
         }
-        return plugin.getWorldKeys();
+        if (args.length == 2) {
+            switch (args[0]) {
+                case "go":
+                    return plugin.getWorldKeys();
+                case "give":
+                    return plugin.getItemKeys();
+            }
+        }
+        return null;
     }
 }

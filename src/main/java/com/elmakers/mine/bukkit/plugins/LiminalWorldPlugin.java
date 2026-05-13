@@ -5,15 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,6 +29,7 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
     private PlayerListener playerListener;
     private ChunkListener chunkListener;
     private String defaultWorld;
+    private ItemGenerator itemGenerator;
 
     @Override
     public void onEnable() {
@@ -50,6 +49,8 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
             LiminalWorld world = new LiminalWorld(this, key, generalConfig, worldConfigs.getConfigurationSection(key));
             worlds.put(key, world);
         }
+
+        itemGenerator = new ItemGenerator(this, generalConfig);
 
         commandExecutor = new LiminalCommandExecutor(this);
         playerListener = new PlayerListener(this);
@@ -136,5 +137,13 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
 
     public LiminalWorld getDefaultWorld() {
         return getWorld(defaultWorld);
+    }
+
+    public ItemStack createItem(String key) {
+        return itemGenerator.createItem(key);
+    }
+
+    public List<String> getItemKeys() {
+        return itemGenerator.getItemKeys();
     }
 }
