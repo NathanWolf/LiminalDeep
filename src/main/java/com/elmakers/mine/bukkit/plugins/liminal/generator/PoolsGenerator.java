@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins.generator;
+package com.elmakers.mine.bukkit.plugins.liminal.generator;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -22,10 +22,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
-import com.elmakers.mine.bukkit.plugins.LiminalWorld;
-import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
-import com.elmakers.mine.bukkit.plugins.data.FoodType;
-import com.elmakers.mine.bukkit.plugins.data.LootTable;
+import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorld;
+import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorldPlugin;
+import com.elmakers.mine.bukkit.plugins.liminal.data.FoodType;
+import com.elmakers.mine.bukkit.plugins.liminal.data.LootTable;
 
 public class PoolsGenerator extends LiminalGenerator {
     private int BEDROCK_LEVEL = 60;

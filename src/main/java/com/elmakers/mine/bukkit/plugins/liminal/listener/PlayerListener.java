@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins.listener;
+package com.elmakers.mine.bukkit.plugins.liminal.listener;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -11,8 +11,8 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 
-import com.elmakers.mine.bukkit.plugins.LiminalWorld;
-import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
+import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorld;
+import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorldPlugin;
 
 public class PlayerListener implements Listener {
     private final LiminalWorldPlugin plugin;

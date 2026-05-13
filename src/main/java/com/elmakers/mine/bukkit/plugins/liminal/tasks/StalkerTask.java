@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins.tasks;
+package com.elmakers.mine.bukkit.plugins.liminal.tasks;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -16,14 +16,13 @@ import org.bukkit.entity.Drowned;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.elmakers.mine.bukkit.plugins.LiminalWorld;
+import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorld;
 
 public class StalkerTask implements Consumer<BukkitTask> {
     private final LiminalWorld world;

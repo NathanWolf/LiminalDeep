@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins;
+package com.elmakers.mine.bukkit.plugins.liminal;
 
 import java.util.List;
 

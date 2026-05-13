@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins.generator;
+package com.elmakers.mine.bukkit.plugins.liminal.generator;
 
 import java.util.Random;
 
@@ -15,7 +15,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
 
-import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
+import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorldPlugin;
 
 public class PoolsExitPopulator extends LiminalPopulator {
     private int EXIT_MIN_DISTANCE_SQUARED = 640 * 640;

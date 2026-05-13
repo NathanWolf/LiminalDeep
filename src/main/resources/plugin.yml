@@ -1,5 +1,5 @@
 name: LiminalDeep
-main: com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin
+main: com.elmakers.mine.bukkit.plugins.liminal.LiminalWorldPlugin
 version: ${project.version}
 api-version: 26.1
 website: http://mine.elmakers.com

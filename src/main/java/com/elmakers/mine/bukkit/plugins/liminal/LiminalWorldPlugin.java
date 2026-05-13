@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins;
+package com.elmakers.mine.bukkit.plugins.liminal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,11 +15,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.elmakers.mine.bukkit.plugins.generator.LiminalGenerator;
-import com.elmakers.mine.bukkit.plugins.generator.OceanGenerator;
-import com.elmakers.mine.bukkit.plugins.generator.PoolsGenerator;
-import com.elmakers.mine.bukkit.plugins.listener.ChunkListener;
-import com.elmakers.mine.bukkit.plugins.listener.PlayerListener;
+import com.elmakers.mine.bukkit.plugins.liminal.generator.LiminalGenerator;
+import com.elmakers.mine.bukkit.plugins.liminal.generator.OceanGenerator;
+import com.elmakers.mine.bukkit.plugins.liminal.generator.PoolsGenerator;
+import com.elmakers.mine.bukkit.plugins.liminal.listener.ChunkListener;
+import com.elmakers.mine.bukkit.plugins.liminal.listener.PlayerListener;
 
 public class LiminalWorldPlugin extends JavaPlugin implements Listener {
     private static int CURRENT_VERSION = 1;

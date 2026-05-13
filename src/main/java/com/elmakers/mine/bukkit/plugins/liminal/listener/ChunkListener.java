@@ -1,10 +1,10 @@
-package com.elmakers.mine.bukkit.plugins.listener;
+package com.elmakers.mine.bukkit.plugins.liminal.listener;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 
-import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
+import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorldPlugin;
 
 public class ChunkListener implements Listener {
     private final LiminalWorldPlugin plugin;

@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins.generator;
+package com.elmakers.mine.bukkit.plugins.liminal.generator;
 
 import java.util.Random;
 
@@ -9,8 +9,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
 
-import com.elmakers.mine.bukkit.plugins.LiminalWorld;
-import com.elmakers.mine.bukkit.plugins.tasks.StalkerTask;
+import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorld;
+import com.elmakers.mine.bukkit.plugins.liminal.tasks.StalkerTask;
 
 public class OceanGenerator extends LiminalGenerator {
     private int SEA_LEVEL = 190;

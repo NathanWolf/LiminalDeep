@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins.data;
+package com.elmakers.mine.bukkit.plugins.liminal.data;
 
 import java.util.List;
 import java.util.Random;

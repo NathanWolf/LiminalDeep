@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins;
+package com.elmakers.mine.bukkit.plugins.liminal;
 
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -15,7 +15,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import com.elmakers.mine.bukkit.plugins.generator.LiminalGenerator;
+import com.elmakers.mine.bukkit.plugins.liminal.generator.LiminalGenerator;
 
 public class LiminalWorld {
     protected final String name;

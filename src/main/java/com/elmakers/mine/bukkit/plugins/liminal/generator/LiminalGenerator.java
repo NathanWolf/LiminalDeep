@@ -1,4 +1,4 @@
-package com.elmakers.mine.bukkit.plugins.generator;
+package com.elmakers.mine.bukkit.plugins.liminal.generator;
 
 import java.util.Locale;
 
@@ -13,8 +13,8 @@ import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.elmakers.mine.bukkit.plugins.LiminalWorld;
-import com.elmakers.mine.bukkit.plugins.LiminalWorldPlugin;
+import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorld;
+import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorldPlugin;
 
 public abstract class LiminalGenerator extends ChunkGenerator {
     protected final LiminalWorld world;
