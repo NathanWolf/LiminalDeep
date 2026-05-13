@@ -50,7 +50,8 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
             worlds.put(key, world);
         }
 
-        itemGenerator = new ItemGenerator(this, generalConfig);
+        ConfigurationSection itemConfigs = configuration.getConfigurationSection("items");
+        itemGenerator = new ItemGenerator(this, generalConfig, itemConfigs);
 
         commandExecutor = new LiminalCommandExecutor(this);
         playerListener = new PlayerListener(this);
