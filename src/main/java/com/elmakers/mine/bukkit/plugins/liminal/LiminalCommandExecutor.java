@@ -23,27 +23,24 @@ public class LiminalCommandExecutor implements TabExecutor {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, @NonNull String[] args) {
-        if (args.length == 0) {
-            showUsage(sender);
-            return true;
+        if (args.length < 2) {
+            return false;
         }
 
         String subCommand = args[0];
         switch (subCommand) {
             case "go":
                 processGoCommand(sender, args[1]);
-                break;
+                return true;
             case "give":
                 if (args.length < 3) {
-                    showUsage(sender);
-                    return true;
+                    return false;
                 }
                 processGiveCommand(sender, args[1], args[2]);
-                break;
+                return true;
             default:
-                showUsage(sender);
+                return false;
         }
-        return true;
     }
 
     private void processGoCommand(CommandSender sender, String level) {
@@ -77,10 +74,6 @@ public class LiminalCommandExecutor implements TabExecutor {
 
         sender.sendMessage(ChatColor.RED + "This command may only be used in-game");
         return false;
-    }
-
-    private void showUsage(CommandSender sender) {
-        sender.sendMessage(ChatColor.RED + "Usage: /liminal [go|give] ...");
     }
 
     @Override

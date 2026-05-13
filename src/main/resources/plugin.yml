@@ -12,3 +12,4 @@ commands:
     description: Commands for the liminal plugin
     usage: |
       /liminal go <pools|ocean>        Go to a specific liminal area
+      /liminal give <player> <item>    Give a liminal item to a player

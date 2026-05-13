@@ -113,8 +113,10 @@ public class PoolsGenerator extends LiminalGenerator {
         }
 
         ConfigurationSection lootConfig = config.getConfigurationSection("loot");
-        for (String key : lootConfig.getKeys(false)) {
-            loot.put(key, new LootTable(lootConfig.getConfigurationSection(key)));
+        if (lootConfig != null) {
+            for (String key : lootConfig.getKeys(false)) {
+                loot.put(key, new LootTable(lootConfig.getConfigurationSection(key)));
+            }
         }
 
         final LiminalWorldPlugin plugin = world.getPlugin();
