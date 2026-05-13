@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Container;
 import org.bukkit.block.EndGateway;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Levelled;
@@ -13,13 +14,12 @@ import org.bukkit.block.data.type.GlowLichen;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.WorldInfo;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Random;
 
 import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorld;
@@ -53,8 +53,8 @@ public class PoolsGenerator extends LiminalGenerator {
     private double FLOODING_MAX_LEVEL = 6;
     private FoodType foodType = FoodType.VINES;
     private final LiminalPopulator exitPopulator;
+    private final LiminalPopulator lootPopulator;
     private final BlockData foodBlock;
-    private Map<String, LootTable> loot = new HashMap<>();
 
     private Material[] FLOOR_BLOCKS = {
         Material.BLUE_CONCRETE,
@@ -77,7 +77,8 @@ public class PoolsGenerator extends LiminalGenerator {
 
     public PoolsGenerator(LiminalWorld world, ConfigurationSection generalConfig, ConfigurationSection config) {
         super(world, generalConfig, config);
-        exitPopulator = createPopulator(config);
+        exitPopulator = createExitPopulator(config);
+        lootPopulator = createLootPopulator(config);
 
         BEDROCK_LEVEL = config.getInt("bedrock_level", BEDROCK_LEVEL);
         FLOOR_LEVEL = config.getInt("floor_level", FLOOR_LEVEL);
@@ -112,13 +113,6 @@ public class PoolsGenerator extends LiminalGenerator {
             getPlugin().getLogger().warning("Invalid food type: " + foodTypeString);
         }
 
-        ConfigurationSection lootConfig = config.getConfigurationSection("loot");
-        if (lootConfig != null) {
-            for (String key : lootConfig.getKeys(false)) {
-                loot.put(key, new LootTable(lootConfig.getConfigurationSection(key)));
-            }
-        }
-
         final LiminalWorldPlugin plugin = world.getPlugin();
         FLOOR_BLOCKS = plugin.getMaterials(config, "floor_blocks", FLOOR_BLOCKS);
         WALL_BLOCKS = plugin.getMaterials(config, "wall_blocks", WALL_BLOCKS);
@@ -126,13 +120,17 @@ public class PoolsGenerator extends LiminalGenerator {
         LIGHT_BLOCKS = plugin.getMaterials(config, "light_blocks", LIGHT_BLOCKS);
     }
 
-    protected LiminalPopulator createPopulator(ConfigurationSection config) {
+    protected LiminalPopulator createExitPopulator(ConfigurationSection config) {
         return new PoolsExitPopulator(this, config);
+    }
+
+    protected LiminalPopulator createLootPopulator(ConfigurationSection config) {
+        return new PoolsLootPopulator(this, config);
     }
 
     @Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
-        return List.of(exitPopulator);
+        return List.of(exitPopulator, lootPopulator);
     }
 
     private BlockData getWindowBlock() {
@@ -286,6 +284,7 @@ public class PoolsGenerator extends LiminalGenerator {
                         chunk.setBlock(x, floorLevel + 1, z, dimLight);
                     }
                 }
+
                 // Add food
                 if (hasFoodVines) {
                     int foodLow = FOOD_LOCATION;
