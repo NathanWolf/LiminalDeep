@@ -8,6 +8,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.EndGateway;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Levelled;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.GlowLichen;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.BlockPopulator;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import com.elmakers.mine.bukkit.plugins.LiminalWorld;
@@ -39,11 +41,13 @@ public class PoolsGenerator extends LiminalGenerator {
     private double POOL_PROBABILITY = 0.75;
     private double DOUBLE_DOOR_PROBABILITY = 0.5;
     private double FOOD_PROBABILITY = 0.01;
+    private double UNDERWATER_FOOD_PROBABILITY = 1;
     private double LIGHT_PROBABILITY = 1;
     private double SUNROOF_PROBABILITY = 1;
     private double FLOODING_PROBABILITY = 0;
     private double FLOODING_MIN_LEVEL = 1;
     private double FLOODING_MAX_LEVEL = 6;
+    private FoodType foodType = FoodType.VINES;
     private final LiminalPopulator exitPopulator;
     private final BlockData foodBlock;
 
@@ -85,6 +89,7 @@ public class PoolsGenerator extends LiminalGenerator {
         FOOD_LOCATION = config.getInt("food_location", FOOD_LOCATION);
         DOUBLE_DOOR_PROBABILITY = config.getDouble("double_door_probability", DOUBLE_DOOR_PROBABILITY);
         FOOD_PROBABILITY = config.getDouble("food_probability", FOOD_PROBABILITY);
+        UNDERWATER_FOOD_PROBABILITY = config.getDouble("underwater_food_probability", UNDERWATER_FOOD_PROBABILITY);
         LIGHT_PROBABILITY = config.getDouble("light_probability", LIGHT_PROBABILITY);
         HALLWAY_MAX_WIDTH_HALF = config.getInt("hallway_max_width_half", HALLWAY_MAX_WIDTH_HALF);
         HALLWAY_MIN_WIDTH_HALF = config.getInt("hallway_min_width_half", HALLWAY_MIN_WIDTH_HALF);
@@ -94,6 +99,13 @@ public class PoolsGenerator extends LiminalGenerator {
         FLOODING_MAX_LEVEL = config.getDouble("flooding_mx_level", FLOODING_MAX_LEVEL);
         String foodBlockData = config.getString("food_block", "");
         foodBlock = foodBlockData.isEmpty() ? null : world.getPlugin().getServer().createBlockData(foodBlockData);
+
+        String foodTypeString = config.getString("food_type", foodType.name());
+        try {
+            foodType = FoodType.valueOf(foodTypeString.toUpperCase(Locale.ROOT));
+        } catch (Exception ex) {
+            getPlugin().getLogger().warning("Invalid food type: " + foodTypeString);
+        }
 
         final LiminalWorldPlugin plugin = world.getPlugin();
         FLOOR_BLOCKS = plugin.getMaterials(config, "floor_blocks", FLOOR_BLOCKS);
@@ -157,6 +169,8 @@ public class PoolsGenerator extends LiminalGenerator {
         final boolean hasXDoor = hasDoubleDoor || doorXSide;
         final boolean hasZDoor = hasDoubleDoor || !doorXSide;
         final boolean hasFood = random.nextDouble() < FOOD_PROBABILITY;
+        final boolean hasFoodVines = hasFood && foodType == FoodType.VINES;
+        final boolean hasUnderwaterFood = hasFood && foodType == FoodType.UNDERWATER;
         final int foodCorner = random.nextInt(4);
         final Material floorBlock = FLOOR_BLOCKS[random.nextInt(FLOOR_BLOCKS.length)];
         final Material wallBlock = WALL_BLOCKS[random.nextInt(WALL_BLOCKS.length)];
@@ -174,6 +188,8 @@ public class PoolsGenerator extends LiminalGenerator {
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
+                boolean isUnderwaterFood = random.nextDouble() < UNDERWATER_FOOD_PROBABILITY;
+                final BlockData waterBlock = hasUnderwaterFood && isUnderwaterFood ? foodBlock : Material.WATER.createBlockData();
                 final boolean hasLight = random.nextDouble() < LIGHT_PROBABILITY;
                 final Material lightMaterial = hasLight ? lightBlock : floorBlock;
 
@@ -217,7 +233,7 @@ public class PoolsGenerator extends LiminalGenerator {
                 } else if (isSunRoof) {
                     // Island
                     if (!hasIsland) {
-                        chunk.setBlock(x, floorLevel, z, Material.WATER);
+                        chunk.setBlock(x, floorLevel, z, waterBlock);
                         if (x == 8 && z == 8) {
                             chunk.setBlock(x, floorLevel - 1, z, lightMaterial);
                         }
@@ -228,7 +244,7 @@ public class PoolsGenerator extends LiminalGenerator {
                     // Water and roof
                     chunk.setBlock(x, roofLevel, z, ceilingBlock);
                     if (hasPools) {
-                        chunk.setBlock(x, floorLevel, z, Material.WATER);
+                        chunk.setBlock(x, floorLevel, z, waterBlock);
                         if ((x == lightsFirst || x == lightsSecond) && (z == lightsFirst || z == lightsSecond)) {
                             chunk.setBlock(x, floorLevel - 1, z, lightMaterial);
                         }
@@ -249,7 +265,9 @@ public class PoolsGenerator extends LiminalGenerator {
                 if (!hasSunRoof && x == 8 && z == 8) {
                     GlowLichen dimLight = (GlowLichen)plugin.getServer().createBlockData(Material.GLOW_LICHEN);
                     dimLight.setFace(BlockFace.DOWN, true);
-                    if (chunk.getBlockData(x, floorLevel, z).getMaterial() == Material.WATER) {
+                    BlockData centerBlock = chunk.getBlockData(x, floorLevel, z);
+                    boolean isWaterlogged = centerBlock instanceof Waterlogged && ((Waterlogged)centerBlock).isWaterlogged();
+                    if (centerBlock.getMaterial() == Material.WATER || isWaterlogged) {
                         dimLight.setWaterlogged(true);
                         chunk.setBlock(x, floorLevel, z, dimLight);
                     } else {
@@ -257,7 +275,7 @@ public class PoolsGenerator extends LiminalGenerator {
                     }
                 }
                 // Add food
-                if (hasFood) {
+                if (hasFoodVines) {
                     int foodLow = FOOD_LOCATION;
                     int foodHigh = 16 - FOOD_LOCATION;
                     switch (foodCorner) {

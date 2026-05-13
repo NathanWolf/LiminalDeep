@@ -71,11 +71,13 @@ worlds:
     island_probability: 0.75
     pool_probability: 0.75
     double_door_probability: 0.1
-    food_probability: 0.01
+    food_probability: 0.05
+    underwater_food_probability: 0.2
+    food_type: underwater
+    food_block: minecraft:kelp
     flooding_probability: 0.5
     flooding_min_level: 1
     flooding_max_level: 4
-    food_block: minecraft:kelp
     floor_blocks:
       - blue_concrete
       - light_blue_concrete
