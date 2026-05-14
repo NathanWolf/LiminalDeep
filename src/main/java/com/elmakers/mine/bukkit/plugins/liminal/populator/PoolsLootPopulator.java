@@ -17,7 +17,7 @@ import org.bukkit.generator.WorldInfo;
 import org.bukkit.inventory.ItemStack;
 
 import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorldPlugin;
-import com.elmakers.mine.bukkit.plugins.liminal.data.LootTable;
+import com.elmakers.mine.bukkit.plugins.liminal.loot.LootTable;
 import com.elmakers.mine.bukkit.plugins.liminal.generator.LiminalGenerator;
 
 public class PoolsLootPopulator extends LiminalPopulator {

@@ -22,7 +22,7 @@ import java.util.Random;
 
 import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorld;
 import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorldPlugin;
-import com.elmakers.mine.bukkit.plugins.liminal.data.FoodType;
+import com.elmakers.mine.bukkit.plugins.liminal.loot.FoodType;
 import com.elmakers.mine.bukkit.plugins.liminal.populator.LiminalPopulator;
 import com.elmakers.mine.bukkit.plugins.liminal.populator.PoolsExitPopulator;
 import com.elmakers.mine.bukkit.plugins.liminal.populator.PoolsLootPopulator;
