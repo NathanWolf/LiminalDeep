@@ -93,9 +93,16 @@ worlds:
       - sea_lantern
     loot:
       shears:
+        block: barrel
         probability: 0.05
         items:
           - kelp_shears
+      smoker:
+        probability: 0.05
+        block: smoker
+        items:
+          - air
+          - coal
     exit:
       min_distance: 640
       max_distance: 3200

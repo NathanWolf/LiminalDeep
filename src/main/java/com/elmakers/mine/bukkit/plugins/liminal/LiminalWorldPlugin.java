@@ -3,6 +3,7 @@ package com.elmakers.mine.bukkit.plugins.liminal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.bukkit.Chunk;
@@ -141,7 +142,17 @@ public class LiminalWorldPlugin extends JavaPlugin implements Listener {
     }
 
     public ItemStack createItem(String key) {
-        return itemGenerator.createItem(key);
+        ItemStack itemStack = itemGenerator.createItem(key);
+        if (itemStack == null) {
+            try {
+                Material material = Material.valueOf(key.toUpperCase(Locale.ROOT));
+                itemStack = new ItemStack(material);
+            } catch (IllegalArgumentException e) {
+                getLogger().severe("Invalid material key: " + key);
+                return null;
+            }
+        }
+        return itemStack;
     }
 
     public List<String> getItemKeys() {

@@ -6,9 +6,11 @@ import java.util.Map;
 import java.util.Random;
 
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Container;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
@@ -30,7 +32,7 @@ public class PoolsLootPopulator extends LiminalPopulator {
         ConfigurationSection lootConfig = config.getConfigurationSection("loot");
         if (lootConfig != null) {
             for (String key : lootConfig.getKeys(false)) {
-                lootTables.put(key, new LootTable(lootConfig.getConfigurationSection(key)));
+                lootTables.put(key, new LootTable(generator, lootConfig.getConfigurationSection(key)));
             }
         }
     }
@@ -61,28 +63,33 @@ public class PoolsLootPopulator extends LiminalPopulator {
         int z;
         int deltaX;
         int deltaZ;
+        BlockFace facing;
         switch (lootCorner) {
             case 0:
                 x = 8;
                 z = 2;
+                facing = lookDirection == 1 ? BlockFace.WEST : BlockFace.EAST;
                 deltaX = lookDirection;
                 deltaZ = 0;
                 break;
             case 1:
                 x = 8;
                 z = 13;
+                facing = lookDirection == 1 ? BlockFace.WEST : BlockFace.EAST;
                 deltaX = lookDirection;
                 deltaZ = 0;
                 break;
             case 2:
                 x = 2;
                 z = 8;
+                facing = lookDirection == 1 ? BlockFace.NORTH : BlockFace.SOUTH;
                 deltaX = 0;
                 deltaZ = lookDirection;
                 break;
             case 3:
                 x = 13;
                 z = 8;
+                facing = lookDirection == 1 ? BlockFace.NORTH : BlockFace.SOUTH;
                 deltaX = 0;
                 deltaZ = lookDirection;
                 break;
@@ -98,17 +105,23 @@ public class PoolsLootPopulator extends LiminalPopulator {
         }
         int barrelX = chunkGlobalX + x;
         int barrelZ = chunkGlobalZ + z;
-        BlockData barrelBlock = plugin.getServer().createBlockData(Material.BARREL);
-        region.setBlockData(barrelX, y, barrelZ, barrelBlock);
+        BlockData containerBlock = loot.getBlockData();
+        if (containerBlock instanceof Directional) {
+            Directional directional = (Directional)containerBlock;
+            directional.setFacing(facing);
+        }
+        region.setBlockData(barrelX, y, barrelZ, containerBlock);
+        final List<String> items = loot.getItems();
 
         BlockState barrelState = region.getBlockState(barrelX, y, barrelZ);
-        if (barrelState instanceof Container) {
+        if (barrelState instanceof Container && !items.isEmpty()) {
             Container barrel = (Container)barrelState;
-            final List<String> items = loot.getItems();
-            for (String itemId : items) {
-                ItemStack itemStack = plugin.createItem(itemId);
-                if (itemStack == null) continue;
-                barrel.getInventory().addItem(itemStack);
+            for (int slot = 0; slot < items.size(); slot++) {
+                ItemStack itemStack = plugin.createItem(items.get(slot));
+                if (itemStack == null) {
+                    itemStack = new ItemStack(Material.AIR);
+                }
+                barrel.getInventory().setItem(slot, itemStack);
             }
         }
     }
