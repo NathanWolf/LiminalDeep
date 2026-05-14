@@ -17,11 +17,12 @@ import org.bukkit.generator.WorldInfo;
 import org.bukkit.inventory.ItemStack;
 
 import com.elmakers.mine.bukkit.plugins.liminal.LiminalWorldPlugin;
+import com.elmakers.mine.bukkit.plugins.liminal.loot.LootDrop;
 import com.elmakers.mine.bukkit.plugins.liminal.loot.LootTable;
 import com.elmakers.mine.bukkit.plugins.liminal.generator.LiminalGenerator;
 
 public class PoolsLootPopulator extends LiminalPopulator {
-    private Map<String, LootTable> lootTables = new HashMap<>();
+    private final LootTable lootTable;
     private int FLOOR_LEVEL = 62;
 
     public PoolsLootPopulator(LiminalGenerator generator, ConfigurationSection config) {
@@ -31,25 +32,17 @@ public class PoolsLootPopulator extends LiminalPopulator {
 
         ConfigurationSection lootConfig = config.getConfigurationSection("loot");
         if (lootConfig != null) {
-            for (String key : lootConfig.getKeys(false)) {
-                lootTables.put(key, new LootTable(generator, lootConfig.getConfigurationSection(key)));
-            }
+            lootTable = new LootTable(generator, lootConfig);
+        } else {
+            lootTable = null;
         }
     }
 
     @Override
     public void populate(WorldInfo worldInfo, Random random, int chunkX, int chunkZ, LimitedRegion region) {
         final LiminalWorldPlugin plugin = getPlugin();
-
-        LootTable loot = null;
-        for (LootTable lootTable : lootTables.values()) {
-            if (lootTable.isPresent(random)) {
-                loot = lootTable;
-                break;
-            }
-        }
-
-        if (loot == null) return;
+        if (lootTable == null || !lootTable.isPresent(random)) return;
+        final LootDrop drop = lootTable.getDrop(random);
 
         final int chunkGlobalX = chunkX << 4;
         final int chunkGlobalZ = chunkZ << 4;
@@ -105,13 +98,13 @@ public class PoolsLootPopulator extends LiminalPopulator {
         }
         int barrelX = chunkGlobalX + x;
         int barrelZ = chunkGlobalZ + z;
-        BlockData containerBlock = loot.getBlockData();
+        BlockData containerBlock = drop.getBlockData();
         if (containerBlock instanceof Directional) {
             Directional directional = (Directional)containerBlock;
             directional.setFacing(facing);
         }
         region.setBlockData(barrelX, y, barrelZ, containerBlock);
-        final List<String> items = loot.getItems();
+        final List<String> items = drop.getItems();
 
         BlockState barrelState = region.getBlockState(barrelX, y, barrelZ);
         if (barrelState instanceof Container && !items.isEmpty()) {
